@@ -1,12 +1,13 @@
 import pymysql
 
-class DatabaseTool(object):
-    def __init__(self) -> None:
-        self.connection = pymysql.connect(host='127.0.0.1',
-                             user='root',
-                             password='123456',
-                             port=3306,
-                             database='water',
+class MySQLTool(object):
+    def __init__(self,host: str, user: str, password: str, port: int, database: str) -> None:
+
+        self.connection = pymysql.connect(host=host,
+                             user=user,
+                             password=password,
+                             port=port,
+                             database=database,
                              charset = 'utf8',
                              cursorclass=pymysql.cursors.DictCursor)
         self.cursor = self.connection.cursor()

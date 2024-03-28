@@ -1,5 +1,6 @@
 import base64
 
+# 解密请求参数工具类
 class DecodeTool:
     def __init__(self, version: str ="2.1") -> None:
         self.version = version

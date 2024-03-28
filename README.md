@@ -9,4 +9,8 @@
 ## 开发进展
 1. 已有加密解密函数
 2. 解析加密数据请求头
-3. 解密``randon``如何生成
+3. 完成MySQL CURD代码编写
+4. 解密``randon``如何生成
+
+## 该项目MySQL数据库
+[MySQL数据库备忘](docs/database.md)

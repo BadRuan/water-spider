@@ -3,16 +3,17 @@
 ## 新建数据库
 ```sql
 CREATE DATABASE water;
+USE DATABASE water;
 ```
 
 ## 新建数据表
 
 ### 新建水文站代码映射表
 
-表格说明:
-1. ID：序号，索引使用
-2. STCD: 水文站点代码
-3. NAME: 水文站名
+字段说明:
+1. ``ID``：序号，索引使用
+2. ``STCD``: 水文站点代码
+3. ``NAME``: 水文站名
 
 ```sql
 CREATE TABLE IF NOT EXISTS `station_code` (
@@ -36,11 +37,11 @@ AUTO_INCREMENT=1 ;
 ```
 ### 新建水位信息数据表
 
-表格说明:
-1. ID：序号，索引使用
-2. STCD: 水文站点代码
-3. Z: 水位高程
-4. TM: 具体时间
+字段说明:
+1. ``ID``：序号，索引使用
+2. ``STCD``: 水文站点代码
+3. ``Z``: 水位高程
+4. ``TM``: 具体时间
 
 ```sql
 CREATE TABLE IF NOT EXISTS `water_level` (
@@ -79,7 +80,6 @@ INSERT INTO `station_code` (`STCD`, `NAME`) VALUES (%s, '%s')
 INSERT INTO `station_code` (`STCD`, `NAME`) VALUES (60115400, '芜湖')
 INSERT INTO `station_code` (`STCD`, `NAME`) VALUES (51004350, '天长')
 ```
-
 
 #### 插入水位信息数据
 

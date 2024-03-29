@@ -1,7 +1,7 @@
 import base64
 
 # 加密及解密响应数据的工具类
-class DataTool:
+class EncodeTool:
     def __init__(self, version: str ="2.1") -> None:
         self.version = version
 

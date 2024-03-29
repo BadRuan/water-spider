@@ -1,15 +1,17 @@
 import pymysql
+from config.database import config
 
 class MySQLTool(object):
-    def __init__(self,host: str, user: str, password: str, port: int, database: str) -> None:
-
-        self.connection = pymysql.connect(host=host,
-                             user=user,
-                             password=password,
-                             port=port,
-                             database=database,
-                             charset = 'utf8',
-                             cursorclass=pymysql.cursors.DictCursor)
+    def __init__(self) -> None:
+        c = config['dev']
+        self.connection = pymysql.connect(
+            host=c["host"],
+            user=c["user"],
+            password=c["password"],
+            port=c["port"],
+            database=c["database"],
+            charset = 'utf8',
+            cursorclass=pymysql.cursors.DictCursor)
         self.cursor = self.connection.cursor()
 
     # 执行插入语句SQL语句

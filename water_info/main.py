@@ -1,6 +1,5 @@
 from config.settings import Setting
 from dao.database import MySQLTool
-from tool.api import ApiTool 
 
 class App(object):
     # 加载MySQL配置文件，连接MySQL数据库

@@ -1,14 +1,13 @@
 from requests import get
 from json import loads
-from tool.dataTool import DataTool
+from lib.encodeTool import DataTool
 
 ModuleidType = {
     'GetLyOrProviceSQBriefing' : '56',
     'GetDXSKSQBriefing' : '59'
 }
-    
 
-class ApiTool:
+class GetEncodeData(object):
 
     def __init__(self) -> None:
         self.tool = DataTool()

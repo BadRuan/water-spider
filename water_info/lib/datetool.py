@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from config.settings import DATE_RANGE_LENGTH
 
 date_range = {
     "btime": '',
@@ -22,7 +23,7 @@ def getTM(input_datetime_str: str) -> str:
     input_datetime = datetime.strptime(input_datetime_str, formatStr)
     if input_datetime > datetime.now():
         input_datetime = datetime.now()
-    ten_days_ago = input_datetime - timedelta(days=10)
+    ten_days_ago = input_datetime - timedelta(days=DATE_RANGE_LENGTH)
     date_range['etime'] = input_datetime.strftime(formatStr)
     date_range['btime'] = ten_days_ago.strftime(formatStr)
     return date_range

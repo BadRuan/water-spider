@@ -1,9 +1,9 @@
 import pymysql
-from config.database import config
+from config.settings import DATABASE_CONFIG
 
 class MySQLTool(object):
     def __init__(self) -> None:
-        c = config['dev']
+        c = DATABASE_CONFIG['dev']
         self.connection = pymysql.connect(
             host=c["host"],
             user=c["user"],
@@ -34,7 +34,7 @@ class MySQLTool(object):
 
     # 插入水位站点代码
     def insert_station(self, STCD: int, NAME: str) -> int:
-        SQL = "INSERT INTO `station_code` (`STCD`, `NAME`) VALUES (`%s`, '%s')" % (STCD, NAME)
+        SQL = "INSERT INTO `station_code` (`STCD`, `NAME`) VALUES (%s, '%s')" % (STCD, NAME)
         return self.__execute_insert(SQL)
     
     # 插入某条水位数据

@@ -1,13 +1,14 @@
-from lib.apiEncodeData import ApiEncodeData
+from dao.database import MySQLTool
 
 class App(object):
     def __init__(self) -> None:
-        self.api = ApiEncodeData()
+        self.database = MySQLTool()
     
-    def getData(self):
-        apiData = self.api.decodeToUsefulData('62904320', '202403201500')
-        print(apiData)
+    def get_all_station(self):
+        l = self.database.get_all_station()
+        for item in l:
+            print(item)
 
 if __name__ == '__main__':
     app = App()
-    app.getData()
+    

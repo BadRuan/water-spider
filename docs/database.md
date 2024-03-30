@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `water_level` (
     `ID` int(11) NOT NULL AUTO_INCREMENT,
     `STCD` int(11) NOT NULL,
     `Z` float(4, 2) NOT NULL,
-    `TM` datetime COLLATE utf8_bin UNIQUE NOT NULL ,
+    `TM` datetime COLLATE utf8_bin NOT NULL ,
     PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
 AUTO_INCREMENT=1 ;

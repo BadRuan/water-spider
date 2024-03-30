@@ -10,7 +10,7 @@ DATABASE_CONFIG = {
 }
 
 # 控制请求数据时间长度范围 单位为天
-DATE_RANGE_LENGTH = 20
+DATE_RANGE_LENGTH = 10
 
 # 站点代码和名称
 STATIONS = [

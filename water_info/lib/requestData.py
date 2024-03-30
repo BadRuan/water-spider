@@ -3,7 +3,7 @@ from json import loads
 from lib.encodeTool import EncodeTool
 from lib.datetool import getTM
 
-class ApiEncodeData(object):
+class RequestData(object):
 
     def __init__(self) -> None:
         self.tool = EncodeTool()
@@ -29,7 +29,6 @@ class ApiEncodeData(object):
     
     def getResEncodeData(self, stcd: str, target_time: str) -> str:
         date_range = getTM(target_time)
-        print(date_range)
         tool = self.tool
         # 请求参数加密
         self.data = {
@@ -50,7 +49,7 @@ class ApiEncodeData(object):
         else:
             raise ValueError("请求异常代码:", response.status_code)
     
-    def decodeToUsefulData(self, stcd: str, target_time: str) -> str:
+    def getDecodeUsefulData(self, stcd: str, target_time: str) -> str:
         data = self.getResEncodeData(stcd, target_time)
         encodeData = loads(data)['data']
         decodeData = self.tool.decrypt(encodeData)

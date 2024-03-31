@@ -12,6 +12,7 @@ class SaveDateService:
             "exists": 0,
             "insert": 0
         }
+        logging.info(f"从目标站点成功获取到{self.count['all']}条水位数据")
     
     # 检查水位数据是否存在
     def __checkDataExists(self, w) -> bool:
@@ -33,5 +34,5 @@ class SaveDateService:
     
     # 返回处理结果字符串
     def reprot(self) -> str:
-        message = '处理完%s条水位数据, 其中: %s条水位数据已存在, 实际新增%s条水位数据.' % (self.count['all'], self.count['exists'], self.count['insert'])
+        message = f"处理{self.count['all']}条水位数据, 其中: 本地已存在{self.count['exists']}条水位数据, 实际新增{self.count['insert']}条水位数据."
         logging.info(message)

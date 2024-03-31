@@ -3,13 +3,14 @@ from lib.engine import Engine
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(module)s | %(message)s",
-    datefmt="%Y-%m-%d %H:%m:%s"
+    filename="console.log",
+    format="%(asctime)s | %(levelname)s | %(message)s",
+    datefmt="%Y-%m-%d %H:%m:%S",
 )
 
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
     app = Engine()
-    app.start('202403301617')
+    app.start('202403311700')
     

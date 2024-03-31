@@ -42,6 +42,8 @@ jobs:
           cache-dependency-path: docs/
       - name: Setup Pages
         uses: actions/configure-pages@v4
+      - name: Change WORKDIR
+        run: ls 
       - name: Install dependencies
         run: yarn
       - name: Build with VitePress

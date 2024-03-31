@@ -55,10 +55,22 @@ class MySQLTool(object):
         res_data = self.__execute_fetchall(SQL)
         return res_data
 
+    # 获取指定时间的水位数据
     def get_water_level(self, STCD: int, TM: str):
         SQL = "SELECT * FROM `water_level` where `STCD` = %s and TM = '%s:00'" % (STCD, TM)
         res_data = self.__execute_fetchone(SQL)
         return res_data
     
+    # 插入三线数据
+    def insert_three_line(self, STCD: int, SFSW: float, JJSW: float, BZSW: float,NAME: str) -> int:
+        SQL = f"INSERT INTO `three_line` (`STCD`, `SFSW`, `JJSW`, `BZSW`, `NAME`) VALUES ('{STCD}', {SFSW}, {JJSW}, {BZSW}, '{NAME}')"
+        return self.__execute_insert(SQL)
+    
+    # 获取所有三线数据
+    def get_all_three_line_list(self) -> list:
+        SQL = "SELECT * FROM `three_line`"
+        res_data = self.__execute_fetchall(SQL)
+        return res_data
+
     def close(self) -> None:
         self.connection.close()

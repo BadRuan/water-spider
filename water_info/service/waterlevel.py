@@ -2,7 +2,7 @@ import logging
 from json import loads
 from dao.database import MySQLTool
 
-class SaveDateService:
+class WaterlevelService:
     def __init__(self, data: str) -> None:
         data_obj = loads(data)
         self.database = MySQLTool()
@@ -23,7 +23,7 @@ class SaveDateService:
         else:
             return False
     
-    # 保存数据到数据库
+    # 保存水位数据到数据库
     def saveToDatabase(self):
         for w in self.data_sw:
             if self.__checkDataExists(w):
@@ -32,7 +32,7 @@ class SaveDateService:
                 self.database.insert_water_level(int(w['STCD']), w['Z'], w['TM'] + ":00")
                 self.count['insert'] = self.count['insert'] + 1
     
-    # 返回处理结果字符串
+    # 返回水位数据保存处理结果字符串
     def reprot(self) -> str:
         message = f"处理{self.count['all']}条水位数据, 其中: 本地已存在{self.count['exists']}条水位数据, 实际新增{self.count['insert']}条水位数据."
         logging.info(message)

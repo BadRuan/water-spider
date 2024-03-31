@@ -1,8 +1,9 @@
 import logging
 from config.settings import STATIONS
 from lib.requestData import RequestData
-from lib.saveService import SaveDateService
-from lib.stationService import StationService
+from service.waterlevel import WaterlevelService
+from service.station import StationService
+from service.threeline import ThreeLineService
 
 class Engine:
     def __init__(self) -> None:    
@@ -22,13 +23,22 @@ class Engine:
                 logging.info(f"请求{s['NAME']}水文站数据")
                 r = RequestData()
                 data = r.getDecodeUsefulData(str(s['STCD']),date )
-                service = SaveDateService(data)
+                service = WaterlevelService(data)
                 service.saveToDatabase()
                 service.reprot()
             logging.info("数据获取并保存完毕")
         else:
             logging.error("目标水文站信息为空, 请添加")
     
-    def initStation(self):
+    def init_station(self):
         s = StationService()
         s.initStation()
+    
+    def init_three(self):
+        s = ThreeLineService()
+        s.init_three_line()
+
+    def get_all_three_line(self):
+        s = ThreeLineService()
+        for i in s.get_all_three_line_list():
+            logging.info(i)

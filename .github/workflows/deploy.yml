@@ -35,19 +35,20 @@ jobs:
       # - uses: pnpm/action-setup@v3 # 如果使用 pnpm，请取消注释
       # - uses: oven-sh/setup-bun@v1 # 如果使用 Bun，请取消注释
       - name: CHANGE WORKDIR
-        run: cd docs 
+        run: ls | 
+            cd docs 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: yarn
+          cache: npm
           # cache-dependency-path: docs/
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Install dependencies
-        run: yarn
+        run: npm ci
       - name: Build with VitePress
-        run: yarn docs:build # 或 pnpm docs:build / yarn docs:build / bun run docs:build
+        run: npm run docs:build # 或 pnpm docs:build / yarn docs:build / bun run docs:build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

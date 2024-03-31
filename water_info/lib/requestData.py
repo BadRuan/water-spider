@@ -1,3 +1,4 @@
+import logging
 from requests import post
 from json import loads
 from lib.encodeTool import EncodeTool
@@ -44,9 +45,8 @@ class RequestData(object):
         if response.status_code == 200:
             responseData = response.text
             return responseData
-        elif response.status_code == 500: 
-            raise ValueError("服务内部异常")
         else:
+            logging.error(f"水文数据库服务器响应错误, 错误码: {response.status_code}")
             raise ValueError("请求异常代码:", response.status_code)
     
     def getDecodeUsefulData(self, stcd: str, target_time: str) -> str:

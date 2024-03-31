@@ -1,3 +1,4 @@
+import logging
 from json import loads
 from dao.database import MySQLTool
 
@@ -32,5 +33,5 @@ class SaveDateService:
     
     # 返回处理结果字符串
     def reprot(self) -> str:
-        message = '共处理%s条数据, 其中: %s条水位数据已存在, 实际插入%s条水位数据.' % (self.count['all'], self.count['exists'], self.count['insert'])
-        return message
+        message = '处理完%s条水位数据, 其中: %s条水位数据已存在, 实际新增%s条水位数据.' % (self.count['all'], self.count['exists'], self.count['insert'])
+        logging.info(message)

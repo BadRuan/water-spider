@@ -1,7 +1,8 @@
 import logging
 from config.settings import STATIONS
 from lib.requestData import RequestData
-from lib.saveservice import SaveDateService
+from lib.saveService import SaveDateService
+from lib.stationService import StationService
 
 class Engine:
     def __init__(self) -> None:    
@@ -27,3 +28,7 @@ class Engine:
             logging.info("数据获取并保存完毕")
         else:
             logging.error("目标水文站信息为空, 请添加")
+    
+    def initStation(self):
+        s = StationService()
+        s.initStation()

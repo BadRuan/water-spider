@@ -13,4 +13,5 @@ logger = logging.getLogger(__name__)
 if __name__ == '__main__':
     app = Engine()
     app.start('202403311700')
+    # app.initStation()
     

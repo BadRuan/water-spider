@@ -24,6 +24,10 @@ let nav_tmp = [
         {
           text: "三线水位信息数据表",
           link: "/database/table/threeline"
+        },
+        {
+          text: "多表连接查询",
+          link: "/database/table/tablejoin"
         }
       ]
   },

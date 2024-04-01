@@ -12,9 +12,9 @@ class WaterlevelService:
             "exists": 0,
             "insert": 0
         }
-        logging.info(f"从目标站点成功获取到{self.count['all']}条水位数据")
-    
-    # 检查水位数据是否存在
+        logging.info(f"从目标站点成功获取到{self.count['all']}条水位数据")   
+
+    # 检查数据库中对应水位站的水位数据是否存在
     def __checkDataExists(self, w) -> bool:
         d = self.dao
         data = d.get_water_level(int(w['STCD']), w['TM']) # 从数据库查询这个时间水位数据是否存在
@@ -29,6 +29,7 @@ class WaterlevelService:
             if self.__checkDataExists(w):
                 self.count['exists'] = self.count['exists'] + 1
             else:
+                # 数据库没有水位信息即可插入水位信息
                 self.dao.insert_water_level(int(w['STCD']), w['Z'], w['TM'] + ":00")
                 self.count['insert'] = self.count['insert'] + 1
     

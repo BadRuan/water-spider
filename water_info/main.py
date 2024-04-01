@@ -1,5 +1,5 @@
 import logging
-from lib.engine import Engine
+from control.waterlevel import WaterlevelControl
 
 logging.basicConfig(
     level=logging.INFO,
@@ -11,6 +11,5 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
-    app = Engine()
-    # app.start('202403311700')
-    app.get_all_three_line()
+    app = WaterlevelControl()
+    a = app.save_waterlevel_info("202404011600")

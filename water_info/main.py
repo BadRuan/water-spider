@@ -1,15 +1,8 @@
 import logging
-from control.waterlevel import WaterlevelControl
-
-logging.basicConfig(
-    level=logging.INFO,
-    # filename="console.log",
-    format="%(asctime)s | %(levelname)s | %(message)s",
-    datefmt="%Y-%m-%d %H:%m:%S",
-)
+from engine import App
 
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
-    app = WaterlevelControl()
-    a = app.save_waterlevel_info("202401011600")
+    app = App()
+    a = app.start("202404012000")

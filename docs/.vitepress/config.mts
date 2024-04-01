@@ -20,8 +20,15 @@ let nav_tmp = [
         {
           text: "水位信息数据表",
           link: "/database/table/waterlevel"
+        },
+        {
+          text: "三线水位信息数据表",
+          link: "/database/table/threeline"
         }
       ]
+  },
+  {
+    text: "开发历程", link: "/story/index"
   }
 ]
 

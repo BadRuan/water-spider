@@ -6,6 +6,10 @@ class ThreeLineService:
     def __init__(self) -> None:
         self.dao = ThreelineDao()
     
+    # 创建站点三线水位表
+    def create_threeline_table(self) -> int:
+        return self.dao.create_threeline_table()
+    
     # 获取所有站点三线水位信息
     def get_all_three_line_list(self) -> list:
         return self.dao.get_all_three_line_list()

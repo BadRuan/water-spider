@@ -14,6 +14,11 @@ class MySQLTool(object):
             cursorclass=pymysql.cursors.DictCursor)
         self.cursor = self.connection.cursor()
 
+    def execute(self, sql: str) -> int:
+        rows  = self.cursor.execute(sql)
+        self.connection.commit()
+        return rows
+
     # 执行插入语句SQL语句
     def execute_insert(self, sql: str) -> int:
         rows  = self.cursor.execute(sql)

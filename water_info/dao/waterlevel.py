@@ -4,6 +4,18 @@ class WaterlevelDao:
     def __init__(self) -> None:
         self.m = MySQLTool()
 
+    # 创建水位数据表
+    def create_waterlevel_table(self) -> int:
+        SQL = """CREATE TABLE IF NOT EXISTS `water_level` (
+                    `ID` int(11) NOT NULL AUTO_INCREMENT,
+                    `STCD` int(11) NOT NULL,
+                    `Z` float(4, 2) NOT NULL,
+                    `TM` datetime COLLATE utf8_bin NOT NULL ,
+                    PRIMARY KEY (`ID`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
+                AUTO_INCREMENT=1 ;"""
+        return self.m.execute(SQL)
+
     # 插入某条水位数据
     def insert_water_level(self, STCD: int, Z: float, TM: str) -> int:
         SQL = "INSERT INTO `water_level` (`STCD`, `Z`, `TM`) VALUES (%s, %s, '%s')" % (STCD, Z, TM)

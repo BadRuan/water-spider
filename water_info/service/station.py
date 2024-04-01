@@ -6,8 +6,12 @@ class StationService:
     def __init__(self) -> None:
         self.dao = StationDao()
 
+    # 创建水文站表
+    def create_station_table(self) -> int:
+        return self.dao.create_station_table()
+
     # 初始化：插入现有水文站点信息
-    def initStation(self):
+    def init_station(self):
         dao = self.dao
         for item in STATIONS:
             dao.insert_station(item['STCD'], item['NAME'])

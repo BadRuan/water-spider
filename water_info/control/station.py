@@ -1,9 +1,8 @@
 from service.station import StationService
 
 class StationControll:
-    def __init__(self) -> None:
-        pass
 
     def init_station(self):
         s = StationService()
-        s.initStation()
+        s.create_station_table()
+        s.init_station()

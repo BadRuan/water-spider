@@ -3,9 +3,12 @@ from json import loads
 from dao.waterlevel import WaterlevelDao
 
 class WaterlevelService:
-    def __init__(self, data: str) -> None:
-        data_obj = loads(data)
+
+    def __init__(self) -> None:
         self.dao = WaterlevelDao()
+
+    def load_data(self, data: str) -> None:
+        data_obj = loads(data)
         self.data_sw: list = data_obj['data_sw']
         self.count = {
             "all": len(self.data_sw),
@@ -13,6 +16,10 @@ class WaterlevelService:
             "insert": 0
         }
         logging.info(f"从目标站点成功获取到{self.count['all']}条水位数据")   
+
+    # 创建水位数据表
+    def create_waterlevel_table(self) -> None:
+        return self.dao.create_waterlevel_table()
 
     # 检查数据库中对应水位站的水位数据是否存在
     def __checkDataExists(self, w) -> bool:

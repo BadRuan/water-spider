@@ -12,4 +12,4 @@ logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
     app = WaterlevelControl()
-    a = app.save_waterlevel_info("202404011600")
+    a = app.save_waterlevel_info("202401011600")

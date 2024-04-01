@@ -2,11 +2,10 @@ import logging
 from service.threeline import ThreeLineService
 
 class ThreelineControl:
-    def __init__(self) -> None:
-        pass
     
-    def init_three(self):
+    def init_threeline(self):
         s = ThreeLineService()
+        s.create_threeline_table()
         s.init_three_line()
 
     def get_all_three_line(self):

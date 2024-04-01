@@ -29,6 +29,15 @@ class ThreelineDao:
         res_data = self.m.execute_fetchall(SQL)
         return res_data
     
+    # 获取连接后的三线表
+    def get_join_three_line_list(self) -> list:
+        SQL = """SELECT a.NAME, b.NAME, SFSW, JJSW, BZSW
+                    FROM `three_line` a
+                    LEFT JOIN `station_code` b
+                    ON a.STCD=b.STCD"""
+        res_data = self.m.execute_fetchall(SQL)
+        return res_data
+    
     # 关闭数据库连接
     def close(self):
         self.dao.close()

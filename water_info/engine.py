@@ -24,6 +24,10 @@ class App:
         self.waterlevel.init_threeline()
         self.threeline.init_threeline()
     
-    # 正常启动项目，需要指定时间
+    # 正常启动项目采集水位信息功能，需要指定时间
     def start(self, datetime: str):
         self.waterlevel.save_waterlevel_info(datetime)
+
+    # 获取连接后的三线表
+    def get_threeline(self):
+        self.threeline.get_join_three_line()

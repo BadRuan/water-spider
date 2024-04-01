@@ -28,18 +28,21 @@ let nav_tmp = [
       ]
   },
   {
-    text: "开发历程", link: "/story/index"
+    text: "开发进展", link: "/story/index"
   }
 ]
 
 export default defineConfig({
-  title: "水位大屏数据分析",
-  description: "水位站数据获取分析",
+  title: "水位数据自动化",
+  description: "水位站数据自动化提取分析",
   themeConfig: {
     nav: nav_tmp,
     sidebar: nav_tmp,
     socialLinks: [
       { icon: 'github', link: 'https://github.com/BadRuan/water-info' }
-    ]
+    ],
+    footer: {
+      copyright: 'Copyright © 2024 RuanFumin'
+    }
   }
 })

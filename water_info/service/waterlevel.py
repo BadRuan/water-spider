@@ -1,11 +1,11 @@
 import logging
 from json import loads
-from dao.database import MySQLTool
+from dao.waterlevel import WaterlevelDao
 
 class WaterlevelService:
     def __init__(self, data: str) -> None:
         data_obj = loads(data)
-        self.database = MySQLTool()
+        self.dao = WaterlevelDao()
         self.data_sw: list = data_obj['data_sw']
         self.count = {
             "all": len(self.data_sw),
@@ -16,7 +16,7 @@ class WaterlevelService:
     
     # 检查水位数据是否存在
     def __checkDataExists(self, w) -> bool:
-        d = self.database
+        d = self.dao
         data = d.get_water_level(int(w['STCD']), w['TM']) # 从数据库查询这个时间水位数据是否存在
         if data :
             return True
@@ -29,7 +29,7 @@ class WaterlevelService:
             if self.__checkDataExists(w):
                 self.count['exists'] = self.count['exists'] + 1
             else:
-                self.database.insert_water_level(int(w['STCD']), w['Z'], w['TM'] + ":00")
+                self.dao.insert_water_level(int(w['STCD']), w['Z'], w['TM'] + ":00")
                 self.count['insert'] = self.count['insert'] + 1
     
     # 返回水位数据保存处理结果字符串

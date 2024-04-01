@@ -1,17 +1,20 @@
 import logging
-from dao.database import MySQLTool
+from dao.threeline import ThreelineDao
 from config.settings import THREE_LINE
 
 class ThreeLineService:
     def __init__(self) -> None:
-        self.database = MySQLTool()
+        self.dao = ThreelineDao()
     
+    # 获取所有站点三线水位信息
     def get_all_three_line_list(self) -> list:
-        return self.database.get_all_three_line_list()
+        return self.dao.get_all_three_line_list()
     
+    # 插入某站点三线水位信息
     def insert_three_line(self, STCD: int, SFSW: float, JJSW: float, BZSW: float,NAME: str) -> int:
-        return self.database.insert_three_line(STCD, SFSW, JJSW, BZSW, NAME)
+        return self.dao.insert_three_line(STCD, SFSW, JJSW, BZSW, NAME)
     
+    # 初始化：插入现有站点三线水位信息
     def init_three_line(self):
         if len(self.get_all_three_line_list()) == 0:
             for i in THREE_LINE:

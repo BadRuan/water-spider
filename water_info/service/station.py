@@ -1,13 +1,14 @@
 import logging
 from config.settings import STATIONS
-from dao.database import MySQLTool
+from dao.station import StationDao
 
 class StationService:
     def __init__(self) -> None:
-        self.database = MySQLTool()
+        self.dao = StationDao()
 
+    # 初始化：插入现有水文站点信息
     def initStation(self):
-        database = self.database
+        dao = self.dao
         for item in STATIONS:
-            database.insert_station(item['STCD'], item['NAME'])
+            dao.insert_station(item['STCD'], item['NAME'])
             logging.info(f"初始化{item['NAME']}站点信息")

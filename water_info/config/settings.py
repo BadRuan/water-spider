@@ -1,7 +1,7 @@
 # 数据库参数
 DATABASE_CONFIG = {
     "dev": {
-        "host": "127.0.0.1",
+        "host": "database",
         "user": "root",
         "password": "123456",
         "port": 3306,

@@ -26,3 +26,10 @@
 5. 多线程性能优化
 6. 融合设计模式：如单例模式管理数据库连接
 7. 文档页面开发
+
+
+## Docker 部署
+```shell
+docker build -t water_info:v1 .
+docker run -d --name water-info water_info:v1
+```

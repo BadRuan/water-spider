@@ -1,0 +1,27 @@
+version: "1"
+services:
+  db:
+    image: mysql:8.0
+    networks:
+      - persist
+    command:
+      - --default_authentication_plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci 
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: water
+    ports:
+      - "3306:3306"
+
+  spider:
+    depends_on:
+      - db
+    build: 
+      dockerfile: Dockerfile
+    command: python main.py
+
+networks:
+  persist:
+    driver: bridge

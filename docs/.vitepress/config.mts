@@ -32,6 +32,13 @@ let nav_tmp = [
       ]
   },
   {
+    text: "数据大屏", items: [
+      {
+        text: "DataEase环境部署", link: "/dataease/env"
+      }
+    ]
+  },
+  {
     text: "开发进展", link: "/story/index"
   }
 ]

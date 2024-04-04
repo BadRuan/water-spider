@@ -6,6 +6,13 @@ class StationService:
     def __init__(self) -> None:
         self.dao = StationDao()
 
+    # 检查水文站表是否存在
+    def check_table_exists(self) -> bool:
+        if self.dao.check_table_exists():
+            return True
+        else:
+            return False
+
     # 创建水文站表
     def create_station_table(self) -> int:
         return self.dao.create_station_table()

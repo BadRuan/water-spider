@@ -20,9 +20,13 @@ class App:
 
     # 首次启动初始化创建数据表
     def first_start(self):
-        self.station.init_station()
-        self.waterlevel.init_threeline()
-        self.threeline.init_threeline()
+        if self.station.check_table_exists():
+            logging.warning("数据表已存在, 无需初始化")
+        else:
+            logging.info("数据库为空, 即将执行初始化操作")
+            self.station.init_station()
+            self.waterlevel.init_threeline()
+            self.threeline.init_threeline()
     
     # 正常启动项目采集水位信息功能，需要指定时间
     def start(self, datetime: str):

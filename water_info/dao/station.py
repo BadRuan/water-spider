@@ -15,6 +15,11 @@ class StationDao:
                 AUTO_INCREMENT=1 ;"""
         return self.dao.execute(SQL)
 
+    # 检查水文站表是否存在
+    def check_table_exists(self) -> int:
+        SQL = f"SHOW TABLES LIKE '%station_code%'"
+        return self.dao.execute(SQL)
+
     # 插入水位站点代码
     def insert_station(self, STCD: int, NAME: str) -> int:
         SQL = "INSERT INTO `station_code` (`STCD`, `NAME`) VALUES (%s, '%s')" % (STCD, NAME)

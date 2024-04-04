@@ -1,7 +1,7 @@
 version: "1"
 services:
-  db:
-    image: mysql:8.0
+  mysql:
+    image: mysql:latest
     networks:
       - persist
     command:
@@ -17,7 +17,7 @@ services:
 
   spider:
     depends_on:
-      - db
+      - mysql
     build: 
       dockerfile: Dockerfile
     command: python main.py

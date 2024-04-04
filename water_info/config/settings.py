@@ -1,7 +1,7 @@
 # 数据库参数
 DATABASE_CONFIG = {
     "dev": {
-        "host": "database",
+        "host": "127.0.0.1",
         "user": "root",
         "password": "123456",
         "port": 3306,
@@ -10,7 +10,7 @@ DATABASE_CONFIG = {
 }
 
 # 控制请求数据时间长度范围 单位为天
-DATE_RANGE_LENGTH = 10
+DATE_RANGE_LENGTH: int = 5
 
 # 站点代码和名称
 STATIONS = [

@@ -12,6 +12,9 @@ DATABASE_CONFIG = {
 # 控制请求数据时间长度范围 单位为天
 DATE_RANGE_LENGTH: int = 5
 
+# 设置获取最新数据请求时间间隔（单位：分钟）
+REQUEST_INTRVAL: int = 5
+
 # 站点代码和名称
 STATIONS = [
     {

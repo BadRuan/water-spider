@@ -1,4 +1,6 @@
 import logging
+import time
+from config.settings import REQUEST_INTRVAL
 from control.station import StationControll
 from control.waterlevel import WaterlevelControl
 from control.threeline import ThreelineControl
@@ -19,7 +21,7 @@ class App:
         self.threeline = ThreelineControl()
 
     # 首次启动初始化创建数据表
-    def first_start(self):
+    def __first_start(self):
         if self.station.check_table_exists():
             logging.warning("数据表已存在, 无需初始化")     
         else:
@@ -32,8 +34,11 @@ class App:
             self.waterlevel.first_load_waterlevel_datedata()
     
     # 正常启动项目采集水位信息功能，需要指定时间
-    def start(self, datetime: str):
-        self.waterlevel.save_waterlevel_info(datetime)
+    def start(self):
+        self.__first_start()
+        while True:
+            self.waterlevel.get_latest_data()
+            time.sleep(REQUEST_INTRVAL * 60)
 
     # 获取连接后的三线表
     def get_threeline(self):

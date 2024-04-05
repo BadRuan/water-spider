@@ -12,11 +12,7 @@ formatStr = "%Y%m%d%H%M"
 def getNowTM() -> str:
     current = datetime.now()
     now_date_str = current.strftime(formatStr)
-    date_range_length_ago = current - timedelta(days=DATE_RANGE_LENGTH)
-    date_range['etime'] = now_date_str
-    date_range['btime'] = date_range_length_ago.strftime(formatStr)
-    logging.debug(f"最新请求时间范围, btime: {date_range['btime']}, etime: {date_range['etime']}.")
-    return date_range
+    return now_date_str
 
 def getTM(input_datetime_str: str) -> str:
     # 日期格式: 202405011200

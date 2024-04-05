@@ -1,5 +1,5 @@
 import logging
-from lib.datetool import get_date_list
+from lib.datetool import get_date_list, getNowTM
 from config.settings import STATIONS
 from service.api import ApiService
 from service.waterlevel import WaterlevelService
@@ -39,9 +39,16 @@ class WaterlevelControl:
         else:
             logging.error("目标水文站信息为空, 请添加")
     
+    # 首次运行加载保存数据
     def first_load_waterlevel_datedata(self):
         logging.info("首次启动, 获取今年历史水位数据")
         for date_item in get_date_list():
             logging.info(f"获取时间{date_item}水位数据")
             self.save_waterlevel_info(date_item)
         logging.info("首次启动, 今年历史水位数据获取完成")
+
+    def get_latest_data(self):
+        now_date = getNowTM()
+        logging.info(f"获取当前时间 {now_date} 水位数据")
+        self.save_waterlevel_info(now_date)
+        

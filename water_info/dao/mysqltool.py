@@ -1,6 +1,8 @@
+import logging
 import pymysql
 from config.settings import DATABASE_CONFIG
 
+# 单例模式
 class Singleton(type):
     _instances = {}
     def __call__(cls, *args, **kwargs):
@@ -10,16 +12,20 @@ class Singleton(type):
 
 class MySQLTool(metaclass=Singleton):
     def __init__(self) -> None:
-        c = DATABASE_CONFIG['dev']
-        self.connection = pymysql.connect(
-            host=c["host"],
-            user=c["user"],
-            password=c["password"],
-            port=c["port"],
-            database=c["database"],
-            charset = 'utf8',
-            cursorclass=pymysql.cursors.DictCursor)
-        self.cursor = self.connection.cursor()
+        try:
+            c = DATABASE_CONFIG['dev']
+            self.connection = pymysql.connect(
+                host=c["host"],
+                user=c["user"],
+                password=c["password"],
+                port=c["port"],
+                database=c["database"],
+                charset = 'utf8',
+                cursorclass=pymysql.cursors.DictCursor)
+            self.cursor = self.connection.cursor()
+        except self.connection.Error as err:
+            logging.error(f"MySQL连接错误: {err}")
+            raise ConnectionError(err)
 
     def execute(self, sql: str) -> int:
         rows  = self.cursor.execute(sql)
@@ -44,5 +50,5 @@ class MySQLTool(metaclass=Singleton):
         data = self.cursor.fetchall()
         return data
 
-    def close(self) -> None:
+    def __del__(self) -> None:
         self.connection.close()

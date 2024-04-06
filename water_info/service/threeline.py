@@ -14,10 +14,6 @@ class ThreeLineService:
     def get_all_three_line_list(self) -> list:
         return self.dao.get_all_three_line_list()
     
-    # 获取连接后的三线表
-    def get_join_three_line_list(self) -> list:
-        return self.dao.get_join_three_line_list()
-    
     # 插入某站点三线水位信息
     def insert_three_line(self, STCD: int, SFSW: float, JJSW: float, BZSW: float,NAME: str) -> int:
         return self.dao.insert_three_line(STCD, SFSW, JJSW, BZSW, NAME)

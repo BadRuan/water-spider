@@ -12,8 +12,3 @@ class ThreelineControl:
         s = ThreeLineService()
         for i in s.get_all_three_line_list():
             logging.info(i)
-
-    def get_join_three_line(self):
-        s = ThreeLineService()
-        for i in s.get_join_three_line_list():
-            print(i)

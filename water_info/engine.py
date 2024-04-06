@@ -40,6 +40,3 @@ class App:
             self.waterlevel.get_latest_data()
             time.sleep(REQUEST_INTRVAL * 60)
 
-    # 获取连接后的三线表
-    def get_threeline(self):
-        self.threeline.get_join_three_line()

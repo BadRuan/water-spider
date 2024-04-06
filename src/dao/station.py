@@ -1,4 +1,4 @@
-from lib.mysqltool import MySQLTool
+from util.mysqltool import MySQLTool
 from dao.abstract.station import StationAbstract
 
 class StationDao(StationAbstract):

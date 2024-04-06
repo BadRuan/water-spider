@@ -1,8 +1,8 @@
 import logging
 from json import loads
-from lib.requestData import RequestData
-from lib.datetool import getTM
-from lib.encodeTool import EncodeTool
+from util.requestData import RequestData
+from util.datetool import getTM
+from util.encodeTool import EncodeTool
 
 class ApiService:
     def __init__(self) -> None:

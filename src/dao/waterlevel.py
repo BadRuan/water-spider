@@ -1,4 +1,4 @@
-from lib.mysqltool import MySQLTool
+from util.mysqltool import MySQLTool
 from dao.abstract.waterlevel import WaterlevelAbstract
 
 class WaterlevelDao(WaterlevelAbstract):

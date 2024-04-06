@@ -1,6 +1,7 @@
 from dao.mysqltool import MySQLTool
+from dao.abstract.station import StationAbstract
 
-class StationDao:
+class StationDao(StationAbstract):
     def __init__(self) -> None:
         self.dao = MySQLTool()
 
@@ -30,7 +31,3 @@ class StationDao:
         SQL = "SELECT * FROM `station_code`"
         res_data = self.dao.execute_fetchall(SQL)
         return res_data
-    
-    # 关闭数据库连接
-    def close(self):
-        self.dao.close()

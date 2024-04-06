@@ -1,6 +1,7 @@
 from dao.mysqltool import MySQLTool
+from dao.abstract.waterlevel import WaterlevelAbstract
 
-class WaterlevelDao:
+class WaterlevelDao(WaterlevelAbstract):
     def __init__(self) -> None:
         self.m = MySQLTool()
 
@@ -32,7 +33,3 @@ class WaterlevelDao:
         SQL = "SELECT * FROM `water_level` where `STCD` = %s and TM = '%s:00'" % (STCD, TM)
         res_data = self.m.execute_fetchone(SQL)
         return res_data
-    
-    # 关闭数据库连接
-    def close(self):
-        self.dao.close()

@@ -1,10 +1,12 @@
 from dao.mysqltool import MySQLTool
+from dao.abstract.threeline import ThreelineAbstract
 
-class ThreelineDao:
+class ThreelineDao(ThreelineAbstract):
 
     def __init__(self) -> None:
         self.m = MySQLTool()
 
+    # 创建水位三线表
     def create_threeline_table(self) -> int:
         SQL = """CREATE TABLE IF NOT EXISTS `three_line` (
                     `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -28,16 +30,3 @@ class ThreelineDao:
         SQL = "SELECT * FROM `three_line`"
         res_data = self.m.execute_fetchall(SQL)
         return res_data
-    
-    # 获取连接后的三线表
-    def get_join_three_line_list(self) -> list:
-        SQL = """SELECT a.NAME, b.NAME, SFSW, JJSW, BZSW
-                    FROM `three_line` a
-                    LEFT JOIN `station_code` b
-                    ON a.STCD=b.STCD"""
-        res_data = self.m.execute_fetchall(SQL)
-        return res_data
-    
-    # 关闭数据库连接
-    def close(self):
-        self.dao.close()

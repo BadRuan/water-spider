@@ -6,7 +6,7 @@ class StationDao(StationAbstract):
         self.dao = MySQLTool()
 
     # 创建水文站表
-    def create_station_table(self) -> int:
+    async def create_station_table(self) -> int:
         SQL = """CREATE TABLE IF NOT EXISTS `station_code` (
                 `ID` int(11) NOT NULL AUTO_INCREMENT,
                 `STCD` int(11) NOT NULL UNIQUE,
@@ -17,17 +17,16 @@ class StationDao(StationAbstract):
         return self.dao.execute(SQL)
 
     # 检查水文站表是否存在
-    def check_table_exists(self) -> int:
+    async def check_table_exists(self) -> int:
         SQL = f"SHOW TABLES LIKE '%station_code%'"
-        return self.dao.execute(SQL)
+        return await self.dao.execute_sql(SQL)
 
     # 插入水位站点代码
-    def insert_station(self, STCD: int, NAME: str) -> int:
+    async def insert_station(self, STCD: int, NAME: str) -> int:
         SQL = "INSERT INTO `station_code` (`STCD`, `NAME`) VALUES (%s, '%s')" % (STCD, NAME)
-        return self.dao.execute_insert(SQL)
+        return await self.dao.execute_insert(SQL)
     
     # 获取所有水位站点数据
-    def get_all_station(self) -> list:
+    async def get_all_station(self) -> list:
         SQL = "SELECT * FROM `station_code`"
-        res_data = self.dao.execute_fetchall(SQL)
-        return res_data
+        return await self.dao.execute_fetchall(SQL)

@@ -28,13 +28,14 @@ class MySQLTool():
         if self.pool is not None:
             await self.pool.close()
 
+    # 执行SQL语句
     async def execute_sql(self, sql: str) -> int:
         await self.ensure_initialized()
         rows  = await self.cursor.execute(sql)
         # self.conn.commit()
         return rows
 
-    # 执行插入语句SQL语句
+    # 执行插入SQL语句
     async def execute_insert(self, sql: str) -> int:
         await self.ensure_initialized()
         rows  = await self.cursor.execute(sql)

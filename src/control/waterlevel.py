@@ -1,8 +1,7 @@
 import logging
-from util.datetool import get_date_list, getNowTM
 from config.settings import STATIONS
-from dao.api import ApiService
 from service.waterlevel import WaterlevelService
+
 
 class WaterlevelControl:
     def __init__(self) -> None:
@@ -10,44 +9,21 @@ class WaterlevelControl:
 
     # 初始化水位信息表
     async def init_threeline(self):
-        flag = await self.s.create_waterlevel_table()
-        if flag:
-            logging.info("成功创建水位信息表")
-        else:
-            logging.info("水位信息表创建失败")
-    
-    # 确认配置文件中目标水文站点信息
-    def __loadTargetStation(self) -> bool:
-        if len(STATIONS) == 0:
-            return False
-        else:
-            c = len(STATIONS)
-            logging.info(f"目标水文站{c}个, 准备获取水位数据")
-            return True    
+        await self.s.create_waterlevel_table()
 
     # 保存水位信息到数据库中
-    def save_waterlevel_info(self, date: str):
-        if self.__loadTargetStation():
-            for s in STATIONS:
-                logging.info(f"请求{s['NAME']}水文站数据")
-                r = ApiService()
-                data = r.getDecodeData(str(s['STCD']),date )
-                self.s.load_data(data)
-                self.s.saveToDatabase()
-                self.s.reprot()
-            logging.info("数据获取并保存完毕")
-        else:
-            logging.error("目标水文站信息为空, 请添加")
-    
-    # 首次运行加载保存数据
-    async def first_load_waterlevel_datedata(self):
-        logging.info("首次启动, 获取今年历史水位数据")
-        for date_item in get_date_list():
-            logging.info(f"获取时间{date_item}水位数据")
-            self.save_waterlevel_info(date_item)
-        logging.info("首次启动, 今年历史水位数据获取完成")
+    async def save_waterlevel_into_database(self, data: list):
+        logging.info(f"数据库操作准备: 待处理{len(data)}条数据")
+        count = 0
+        for item in data:
+            num = await self.s.insert_water_level(
+                item["STCD"], float(item["Z"]), item["TM"]
+            )
+            count += num
+        logging.info(f"数据库成功新增{count}条数据")
 
-    def get_latest_data(self):
-        now_date = getNowTM()
-        logging.info(f"获取当前时间 {now_date} 水位数据")
-        self.save_waterlevel_info(now_date)
+    # 首次运行加载保存数据
+    async def first_load_waterlevel_datedata(self, data: list):
+        logging.info("首次启动爬虫程序,准备获取今年内目标站点所有历史水位数据")
+        await self.save_waterlevel_into_database(data)
+        logging.info("今年内目标站点所有历史水位数据获取完成")

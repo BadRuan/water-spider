@@ -1,6 +1,7 @@
 from util.mysqltool import MySQLTool
 from dao.abstract.station import StationAbstract
 
+
 class StationDao(StationAbstract):
     def __init__(self) -> None:
         self.dao = MySQLTool()
@@ -14,7 +15,7 @@ class StationDao(StationAbstract):
                 PRIMARY KEY (`ID`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
                 AUTO_INCREMENT=1 ;"""
-        return self.dao.execute(SQL)
+        return await self.dao.execute_sql(SQL)
 
     # 检查水文站表是否存在
     async def check_table_exists(self) -> int:
@@ -23,9 +24,9 @@ class StationDao(StationAbstract):
 
     # 插入水位站点代码
     async def insert_station(self, STCD: int, NAME: str) -> int:
-        SQL = "INSERT INTO `station_code` (`STCD`, `NAME`) VALUES (%s, '%s')" % (STCD, NAME)
+        SQL = f"INSERT INTO `station_code` (`STCD`, `NAME`) VALUES ({STCD}, '{NAME}')"
         return await self.dao.execute_insert(SQL)
-    
+
     # 获取所有水位站点数据
     async def get_all_station(self) -> list:
         SQL = "SELECT * FROM `station_code`"

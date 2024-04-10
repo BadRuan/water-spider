@@ -1,5 +1,6 @@
 from service.station import StationService
 
+
 class StationControll:
     def __init__(self) -> None:
         self.s = StationService()

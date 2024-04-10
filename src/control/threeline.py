@@ -1,8 +1,9 @@
 import logging
 from service.threeline import ThreeLineService
 
+
 class ThreelineControl:
-    
+
     # 初始化三线数据
     async def init_threeline(self):
         s = ThreeLineService()

@@ -1,7 +1,7 @@
 import logging
 import asyncio
-from dao.api import ApiDao
-from json import dumps
+from service.api import ApiService
+from control.waterlevel import WaterlevelControl
 
 logging.basicConfig(
     level=logging.INFO,
@@ -13,11 +13,12 @@ logging.basicConfig(
 
 class App:
 
-    def __init__(self) -> None:
-        pass
-
     async def main(self):
-        pass
+        api_service = ApiService()
+        waterlevel_control = WaterlevelControl()
+
+        recently_data = await api_service.get_recently_data()
+        await waterlevel_control.save_waterlevel_into_database(recently_data)
 
     # 正常启动项目采集水位信息功能，需要指定时间
     def start(self):

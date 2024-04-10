@@ -1,7 +1,7 @@
 import logging
 from util.datetool import get_date_list, getNowTM
 from config.settings import STATIONS
-from service.api import ApiService
+from dao.api import ApiService
 from service.waterlevel import WaterlevelService
 
 class WaterlevelControl:

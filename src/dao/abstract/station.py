@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class StationAbstract(ABC):
 
     # 创建水文站表
@@ -16,7 +17,7 @@ class StationAbstract(ABC):
     @abstractmethod
     def insert_station(self, STCD: int, NAME: str) -> int:
         pass
-    
+
     # 获取所有水位站点数据
     @abstractmethod
     def get_all_station(self) -> list:

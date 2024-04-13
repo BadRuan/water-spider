@@ -1,6 +1,5 @@
 import logging
 from json import loads
-from dao.abstract.api import ApiAbstract
 from config.settings import DATE_RANGE_LENGTH
 from util.datetool import (
     get_recently_time_range,
@@ -11,7 +10,7 @@ from util.apiTool import ApiTool
 from util.encodeTool import EncodeTool
 
 
-class ApiDao(ApiAbstract):
+class ApiDao:
     def __init__(self) -> None:
         self.api = ApiTool()
         self.tool = EncodeTool()

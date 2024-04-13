@@ -1,35 +1,28 @@
 import logging
-from service.abstract.waterlevel import WaterlevelAbstract
+from config.settings import STATIONS2
 from dao.waterlevel import WaterlevelDao
 
 
-class WaterlevelService(WaterlevelAbstract):
+class WaterlevelService:
 
     def __init__(self) -> None:
         self.dao = WaterlevelDao()
 
     # 创建水位数据表
-    async def create_waterlevel_table(self) -> int:
-        return await self.dao.create_waterlevel_table()
-
-    # 检查数据库中对应水位站的水位数据是否存在
-    async def __checkDataExists(self, STCD: int, TM: str) -> bool:
-        data = await self.dao.get_water_level(
-            STCD, TM
-        )  # 从数据库查询这个 时间 水位 数据是否存在
-        if data:
-            return True
+    async def create_waterlevel_table(self) -> int: 
+        result =  await self.dao.create_waterlevel_table()
+        if result:
+            logging.info("创建水位数据表成功")
         else:
-            return False
+            logging.error("创建水位数据表失败")
 
-    # 插入某条水位数据
-    async def insert_water_level(self, STCD: int, Z: float, TM: str) -> int:
-        return await self.dao.insert_water_level(STCD, Z, TM)
 
-    # 获取某站点指定数量的水位数据
-    async def get_water_level_list(self, STCD: int, limit: int) -> list:
-        return await self.dao.get_water_level_list(STCD, limit)
-
-    # 获取指定时间的水位数据
-    async def get_water_level(self, STCD: int, TM: str):
-        return await self.dao.get_water_level(STCD, TM)
+    # 插入水位数据
+    async def insert_water_level(self, waterlevels: list) -> int:
+        if len(waterlevels) == 0:
+            logging.error("没有水位数据, 无需入库")
+        else:
+            NAME = STATIONS2[waterlevels[0]["STCD"]]
+            num = await self.dao.insert_water_level(waterlevels)
+            logging.info(f"{NAME}水文站数据入库情况: 成功 {num} 条 / 总 {len(waterlevels)} 条.")
+            

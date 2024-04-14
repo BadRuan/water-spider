@@ -1,12 +1,9 @@
-# Docker搭建MySQL数据库
+# Docker搭建TDengine数据库
 
-## Docker镜像
-Docker:[MySQL 镜像库地址](https://hub.docker.com/_/mysql?tab=tags)
-
-## 拉取 MySQL 镜像
+## 拉取 TDengine 镜像
 
 ```shell
-docker pull mysql:latest
+docker pull tdengine/tdengine:latest
 ```
 
 ## 查看本地镜像
@@ -17,52 +14,64 @@ docker images
 
 显示本地镜像如下：
 ```
-REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
-mysql        latest    82563e0cbf18   5 days ago    632MB
+REPOSITORY          TAG       IMAGE ID       CREATED       SIZE
+tdengine/tdengine   latest    b1a8957bf226   6 weeks ago   686MB
 ```
 
 ## 运行容器
 
 ```shell
-docker run -itd --name mysql-test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql
+docker run -d -p 6030:6030 -p 6041:6041 -p 6043-6049:6043-6049 -p 6043-6049:6043-6049/udp tdengine/tdengine
 ```
 
-参数说明：
-- p 3306:3306 ：映射容器服务的 3306 端口到宿主机的 3306 端口，外部主机可以直接通过 宿主机 ip:3306 访问到 MySQL 的服务。
-- MYSQL_ROOT_PASSWORD=123456：设置 MySQL 服务 root 用户的密码。
+TDengine 3.0 服务端仅使用 6030 TCP 端口。6041 为 taosAdapter 所使用提供 REST 服务端口。6043-6049 为 taosAdapter 提供第三方应用接入所使用端口，可根据需要选择是否打开。
+
+
+如果需要将数据持久化到本机的某一个文件夹
+
+```shell
+docker run -d -v ~/data/taos/dnode/data:/var/lib/taos \
+  -v ~/data/taos/dnode/log:/var/log/taos \
+  -p 6030:6030 -p 6041:6041 -p 6043-6049:6043-6049 -p 6043-6049:6043-6049/udp tdengine/tdengine
+```
+
 
 ```
 ➜  ~ docker ps
-CONTAINER ID   IMAGE     COMMAND                  CREATED      STATUS       PORTS                               NAMES
-bcabdeb9344e   mysql     "docker-entrypoint.s…"   2 days ago   Up 3 hours   0.0.0.0:3306->3306/tcp, 33060/tcp   mysql-demo
+CONTAINER ID   IMAGE               COMMAND                  CREATED        STATUS       PORTS
+                                                                                     NAMES
+ed8d92b30959   tdengine/tdengine   "/tini -- /usr/bin/e…"   41 hours ago   Up 4 hours   0.0.0.0:6030->6030/tcp, 0.0.0.0:6041->6041/tcp, 0.0.0.0:6043-6049->6043-6049/tcp, 0.0.0.0:6043-6049->6043-6049/udp   tdgengine
 ```
 
 ## 进入容器
 ```shell
-docker exec -it bcab bash
+docker exec -it <container name> bash
 ```
-显示如下：
+
 ```
-bash-4.4#
-```
-登录MySQL：
+登录TDengine：
 ```shell
-mysql -u root -p 
+taos
 ```
-显示：``Enter password:``
+
 然后输入刚设置的密码即可，登录成功显示如下：
 ```
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 54
-Server version: 8.3.0 MySQL Community Server - GPL
+Enter password: Welcome to the TDengine Command Line Interface, Client Version:3.2.3.0
+Copyright (c) 2023 by TDengine, all rights reserved.
 
-Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+  ********************************  Tab Completion  ************************************
+  *   The TDengine CLI supports tab completion for a variety of items,                 *
+  *   including database names, table names, function names and keywords.              *
+  *   The full list of shortcut keys is as follows:                                    *
+  *    [ TAB ]        ......  complete the current word                                *
+  *                   ......  if used on a blank line, display all supported commands  *
+  *    [ Ctrl + A ]   ......  move cursor to the st[A]rt of the line                   *
+  *    [ Ctrl + E ]   ......  move cursor to the [E]nd of the line                     *
+  *    [ Ctrl + W ]   ......  move cursor to the middle of the line                    *
+  *    [ Ctrl + L ]   ......  clear the entire screen                                  *
+  *    [ Ctrl + K ]   ......  clear the screen after the cursor                        *
+  *    [ Ctrl + U ]   ......  clear the screen before the cursor                       *
+  **************************************************************************************
 
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-mysql>
+Server is Community Edition.
 ```

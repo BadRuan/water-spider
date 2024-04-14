@@ -11,7 +11,7 @@ DATABASE_CONFIG = {
 # 控制请求数据时间长度范围 (单位: 天)
 DATE_RANGE_LENGTH = {
     "init": 20,
-    "normal": 5,
+    "normal": 1,
 }
 
 # 设置获取最新数据请求时间间隔（单位: 分钟）

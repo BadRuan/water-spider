@@ -9,20 +9,28 @@ class WaterlevelService:
         self.dao = WaterlevelDao()
 
     # 创建水位数据表
-    async def create_waterlevel_table(self) -> int: 
-        result =  await self.dao.create_waterlevel_table()
+    async def create_waterlevel_table(self) -> int:
+        result = await self.dao.create_waterlevel_table()
         if result:
             logging.info("创建水位数据表成功")
         else:
             logging.error("创建水位数据表失败")
 
-
     # 插入水位数据
     async def insert_water_level(self, waterlevels: list) -> int:
-        if len(waterlevels) == 0:
-            logging.error("没有水位数据, 无需入库")
+        # 数据条目超过1000切片, 防止SQL语句过长
+        def slice_list(data, length):
+            return [data[i : i + length] for i in range(0, len(data), length)]
+
+        length = len(waterlevels)
+        if length == 0:
+            logging.info("没有水位数据, 无需入库")
+            return 0
         else:
-            NAME = STATIONS2[waterlevels[0]["STCD"]]
-            num = await self.dao.insert_water_level(waterlevels)
-            logging.info(f"{NAME}水文站数据入库情况: 成功 {num} 条 / 总 {len(waterlevels)} 条.")
-            
+            sliced_data = slice_list(waterlevels, 1000)
+            count = 0
+            for data in sliced_data:
+                num = await self.dao.insert_water_level(data)
+                count += num
+            logging.info(f"共{length}条数据, 成功插入{count}条数据")
+            return count

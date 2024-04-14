@@ -1,5 +1,6 @@
 import logging
 import asyncio
+from config.settings import REQUEST_INTRVAL
 from service.waterlevel import WaterlevelService
 from service.api import ApiService
 
@@ -13,18 +14,22 @@ logging.basicConfig(
 
 class App:
 
-    async def main(self):
-        api = ApiService()
-        service = WaterlevelService()
-        data = await api.get_recently_data()
-        for i in data:
-            await service.insert_water_level(data[i])
+    def __init__(self) -> None:
+        self.api = ApiService()
+        self.database = WaterlevelService()
 
-    # 正常启动项目采集水位信息功能，需要指定时间
+    async def main(self):
+        while True:
+            data = await self.api.get_recently_data()
+            for item in data:
+                await self.database.insert_water_level(data[item])
+            await asyncio.sleep(REQUEST_INTRVAL * 60)
+
+    async def first_start(self):
+        self.database.create_waterlevel_table()
+        data = await self.api.get_year_datas()
+        for item in data:
+            await self.database.insert_water_level(data[item])
+
     def start(self):
         asyncio.run(self.main())
-
-
-if __name__ == "__main__":
-    app = App()
-    app.start()

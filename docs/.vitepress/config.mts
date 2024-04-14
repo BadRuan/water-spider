@@ -10,24 +10,8 @@ let nav_tmp = [
           link: "/database/setenv"
         },
         {
-          text: "创建数据库",
-          link: "/database/index"
-        },
-        {
-          text: "水文站点数据表",
-          link: "/database/table/station"
-        },
-        {
           text: "水位信息数据表",
           link: "/database/table/waterlevel"
-        },
-        {
-          text: "三线水位信息数据表",
-          link: "/database/table/threeline"
-        },
-        {
-          text: "多表连接查询",
-          link: "/database/table/tablejoin"
         }
       ]
   },

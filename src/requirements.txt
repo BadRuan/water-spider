@@ -17,7 +17,7 @@ pytest==8.1.1
 pytest-cov==4.1.0
 pytz==2024.1
 requests==2.31.0
-taospy==2.7.15
+taospy==2.7
 tomli==2.0.1
 urllib3==2.2.1
 yarl==1.9.4

@@ -2,7 +2,7 @@ import taosrest
 from config.settings import DATABASE_CONFIG
 
 
-class MySQLTool:
+class TDengineTool:
     def __init__(self) -> None:
         self.conn = None
         self.initialized = False

@@ -1,10 +1,10 @@
-from util.mysqltool import MySQLTool
+from util.tdenginetool import TDengineTool
 from config.settings import STATIONS2
 
 
 class WaterlevelDao:
     def __init__(self) -> None:
-        self.m = MySQLTool()
+        self.m = TDengineTool()
 
     # 创建水位数据表
     async def create_waterlevel_table(self) -> int:

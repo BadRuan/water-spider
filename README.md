@@ -29,5 +29,5 @@
 ## Docker 部署
 ```shell
 docker build -t water_info:v2 .
-docker run -d --name water-info water_info:v2
+docker run -d --name water-spider2 water_info:v2
 ```

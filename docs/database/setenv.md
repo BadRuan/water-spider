@@ -48,8 +48,10 @@ ed8d92b30959   tdengine/tdengine   "/tini -- /usr/bin/e…"   41 hours ago   Up 
 docker exec -it <container name> bash
 ```
 
-```
+
+
 登录TDengine：
+
 ```shell
 taos
 ```
@@ -74,4 +76,10 @@ Copyright (c) 2023 by TDengine, all rights reserved.
   **************************************************************************************
 
 Server is Community Edition.
+```
+
+## 修改root密码
+
+```sql
+ALTER USER root PASS "123456";
 ```

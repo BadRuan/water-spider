@@ -9,9 +9,9 @@
 4. ``NAME``: 站点名
 
 ```sql
-CREATE TABLE IF NOT EXISTS `waterlevel` 
+CREATE STABLE IF NOT EXISTS `waterlevel` 
         (`ts` TIMESTAMP, `current` FLOAT) 
-        TAGS (`STCD` INT, `NAME` BINARY(16))
+        TAGS (`stcd` INT, `name` BINARY(16))
 ```
 
 ```

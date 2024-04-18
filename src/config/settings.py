@@ -1,7 +1,7 @@
 # 数据库参数
 DATABASE_CONFIG = {
     "dev": {
-        "url": "http://127.0.0.1:6041",
+        "url": "127.0.0.1:6041",
         "user": "root",
         "password": "123456",
         "database": "water",

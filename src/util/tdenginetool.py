@@ -1,4 +1,4 @@
-import taosrest
+import taosws
 from config.settings import DATABASE_CONFIG
 
 
@@ -10,18 +10,11 @@ class TDengineTool:
     def init_connect(self):
         try:
             c = DATABASE_CONFIG["dev"]
-            self.conn = taosrest.connect(
-                url=c["url"],
-                user=c["user"],
-                password=c["password"],
-                database=c["database"],
-            )
+            dsn = f'taosws://{c["user"]}:{c["password"]}@{c["url"]}'
+            self.conn = taosws.connect(dsn)
+            db = c["database"]
+            self.conn.execute(f"USE {db}")
             self.initialized = True
-        except taosrest.Error as e:
-            print(e)
-            print("exception class: ", e.__class__.__name__)
-            print("error number:", e.errno)
-            print("error message:", e.msg)
         except BaseException as other:
             print("exception occur")
             print(other)

@@ -23,7 +23,7 @@ class TDengineTool:
         if not self.initialized:
             self.init_connect()
 
-    def __exit__(self):
+    def __exit__(self, exc_type, exc_value, exc_tb):
         if self.conn is not None:
             self.conn.close()
 

@@ -1,13 +1,11 @@
-from dao.api import ApiDao
-import asyncio
+from util.decodeTool import DecodeStrTool
 
 
-async def main():
-    api = ApiDao()
-    data = await api.get_recently_data(62900700)
-    for i in data:
-        print(i)
+def main():
+    s = "2.1ZUdTdEx3bmlBZWRuWFo="
+    tool = DecodeStrTool()
+    print(tool.decrypt(s))
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

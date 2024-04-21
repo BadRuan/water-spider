@@ -17,13 +17,12 @@ class ApiTool(object):
         self.url = "http://61.191.22.196:5566/AHSXX/service/PublicBusinessHandler.ashx"
 
     # 异步发送请求
-    async def getResData(self, request_data):
+    async def getResData(self, request_data) -> str:
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 url=self.url, headers=self.headers, data=request_data
             ) as response:
                 if response.status == 200:
-                    json_body = await response.text()
-                    return json_body
+                    return await response.text()
                 else:
-                    return ''
+                    return ""

@@ -1,7 +1,7 @@
 import logging
-from config.settings import STATIONS2
+from typing import List
 from dao.waterlevel import WaterlevelDao
-
+from dao.api import WaterLevelData
 
 class WaterlevelService:
 
@@ -17,7 +17,7 @@ class WaterlevelService:
             logging.error("创建水位数据表失败")
 
     # 插入水位数据
-    async def insert_water_level(self, waterlevels: list) -> int:
+    async def insert_water_level(self, waterlevels: List[WaterLevelData]) -> int:
         # 数据条目超过1000切片, 防止SQL语句过长
         def slice_list(data, length):
             return [data[i : i + length] for i in range(0, len(data), length)]

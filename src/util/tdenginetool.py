@@ -23,9 +23,13 @@ class TDengineTool:
         if not self.initialized:
             self.init_connect()
 
-    def close(self):
+    def __exit__(self):
         if self.conn is not None:
             self.conn.close()
+
+    def __enter__(self):
+        self.ensure_initialized()
+        return self.conn
 
     # 执行SQL语句
     async def execute_sql(self, sql: str) -> int:
@@ -33,6 +37,6 @@ class TDengineTool:
         return self.conn.execute(sql)
 
     # 执行获取数据SQL语句
-    async def execute_fetch(self, sql):
+    async def query_fetch(self, sql):
         self.ensure_initialized()
-        return self.conn.execute(sql)
+        return self.conn.query(sql)

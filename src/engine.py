@@ -1,5 +1,7 @@
 import logging
 import asyncio
+from typing import List
+from dao.api import WaterLevelData
 from config.settings import REQUEST_INTRVAL
 from service.waterlevel import WaterlevelService
 from service.api import ApiService
@@ -20,7 +22,7 @@ class App:
 
     async def main(self):
         while True:
-            data = await self.api.get_recently_data()
+            data: List[WaterLevelData] = await self.api.get_recently_data()
             for item in data:
                 await self.database.insert_water_level(data[item])
             await asyncio.sleep(REQUEST_INTRVAL * 60)

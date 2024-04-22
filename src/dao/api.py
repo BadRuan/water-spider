@@ -35,7 +35,12 @@ class ApiDao:
             "sttp": tool.encrypt("ZQ"),
             "waterEncode": tool.encrypt("true"),
         }
-        logging.debug("请求参数: ", data)
+        # 解决新桥闸上参数不一致问题
+        if STCD == 62905100:
+            data["name"] = tool.encrypt("GetSwLineAndZX")
+            data["sttp"] = tool.encrypt("DD")
+            data["zxstcd"] = tool.encrypt("62905200")
+            data["zxsttp"] = tool.encrypt("ZZ")
         return await self.api.getResData(data)
 
     # 获取解密数据

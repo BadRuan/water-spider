@@ -21,7 +21,7 @@ tdengine/tdengine   latest    b1a8957bf226   6 weeks ago   686MB
 ## 运行容器
 
 ```shell
-docker run -d -p 6030:6030 -p 6041:6041 -p 6043-6049:6043-6049 -p 6043-6049:6043-6049/udp tdengine/tdengine
+docker run -itd --name=tdengine -p 6030:6030 -p 6041:6041 -p 6043-6049:6043-6049 -p 6043-6049:6043-6049/udp tdengine/tdengine
 ```
 
 TDengine 3.0 服务端仅使用 6030 TCP 端口。6041 为 taosAdapter 所使用提供 REST 服务端口。6043-6049 为 taosAdapter 提供第三方应用接入所使用端口，可根据需要选择是否打开。
@@ -91,5 +91,5 @@ CREATE DATABASE water;
 
 ## 使用数据库
 ```sql
-USE DATABASE water;
+USE water;
 ```

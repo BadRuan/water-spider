@@ -21,7 +21,7 @@ class ApiService:
     async def get_target_data(
         self,
         input_datetime_str: str,
-        days: int = DATE_RANGE_LENGTH["normal"],
+        days: int = DATE_RANGE_LENGTH.normal,
     ):
         data_dict = {}
         for station in STATIONS:
@@ -36,7 +36,7 @@ class ApiService:
     async def get_year_datas(self):
         data_dict = {}
         for station in STATIONS:
-            datas = await self.dao.get_year_datas(station["STCD"])
+            datas = await self.dao.get_year_datas(station.stcd)
             data_dict[str(station.stcd)] = datas
             logging.info(f"获取到{station.name}今年水位数据: {len(datas)} 条.")
         return data_dict

@@ -1,5 +1,5 @@
 from typing import List
-from model.seetings import Database, Station
+from model.seetings import Database, Station, Date_Range
 
 
 # 数据库参数
@@ -9,10 +9,8 @@ DATABASE_DEV = Database(
 
 
 # 控制请求数据时间长度范围 (单位: 天)
-DATE_RANGE_LENGTH = {
-    "init": 20,
-    "normal": 1,
-}
+DATE_RANGE_LENGTH = Date_Range(init=20, normal=1)
+
 
 # 设置获取最新数据请求时间间隔（单位: 分钟）
 REQUEST_INTRVAL: int = 5

@@ -14,3 +14,7 @@ class Database(BaseModel):
 class Station(BaseModel):
     stcd: int
     name: str
+
+class Date_Range(BaseModel):
+    init: int
+    normal: int

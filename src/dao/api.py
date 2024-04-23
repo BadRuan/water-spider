@@ -61,7 +61,7 @@ class ApiDao:
         self,
         STCD: int,
         input_datetime_str: str,
-        days: int = DATE_RANGE_LENGTH["normal"],
+        days: int = DATE_RANGE_LENGTH.normal,
     ) -> List[WaterLevelData]:
         return await self.__getDecodeData(
             STCD, get_time_range(input_datetime_str, days)

@@ -13,7 +13,7 @@ class DateRange(BaseModel):
 
 # 输入结束时间，生成指定范围长度的时间范围
 def get_time_range(
-    input_datetime_str: str, day_length: int = DATE_RANGE_LENGTH["normal"]
+    input_datetime_str: str, day_length: int = DATE_RANGE_LENGTH.normal
 ) -> DateRange:
     # 日期格式: 202405011200
     if len(input_datetime_str) != 12:
@@ -35,7 +35,7 @@ def get_recently_time_range() -> DateRange:
 
 
 # 获取初始化日期列表
-def get_init_date_list(day: int = DATE_RANGE_LENGTH["init"]) -> List[DateRange]:
+def get_init_date_list(day: int = DATE_RANGE_LENGTH.init) -> List[DateRange]:
     # 获取当年的第一天
     this_year = datetime.now().year
     start_date = datetime(this_year, 1, 1)
@@ -56,5 +56,5 @@ def get_init_date_list(day: int = DATE_RANGE_LENGTH["init"]) -> List[DateRange]:
 
 
 # 获取初始化日期范围列表
-def get_init_data_range_list(day: int = DATE_RANGE_LENGTH["init"]) -> List[DateRange]:
+def get_init_data_range_list(day: int = DATE_RANGE_LENGTH.init) -> List[DateRange]:
     return [get_time_range(init_day, day) for init_day in get_init_date_list(day)]

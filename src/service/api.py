@@ -1,5 +1,5 @@
 import logging
-from config.settings import STATIONS, STATIONS2, DATE_RANGE_LENGTH
+from config.settings import STATIONS, DATE_RANGE_LENGTH
 from dao.api import ApiDao
 
 
@@ -12,10 +12,9 @@ class ApiService:
     async def get_recently_data(self) -> list:
         data_dict = {}
         for station in STATIONS:
-            datas = await self.dao.get_recently_data(station["STCD"])
-            data_dict[station["STCD"]] = datas
-            STCD = station["STCD"]
-            logging.info(f"获取到{STATIONS2[str(STCD)]}近期水位数据: {len(datas)} 条.")
+            datas = await self.dao.get_recently_data(station.stcd)
+            data_dict[str(station.stcd)] = datas
+            logging.info(f"获取到{station.name}近期水位数据: {len(datas)} 条.")
         return data_dict
 
     # 获取指定时间的水位数据
@@ -27,11 +26,10 @@ class ApiService:
         data_dict = {}
         for station in STATIONS:
             datas = await self.dao.get_target_data(
-                station["STCD"], input_datetime_str, days
+                station.stcd, input_datetime_str, days
             )
-            data_dict[station["STCD"]] = datas
-            STCD = station["STCD"]
-            logging.info(f"获取 {STATIONS2[str(STCD)]} 水位数据: {len(datas)} 条.")
+            data_dict[str(station.stcd)] = datas
+            logging.info(f"获取 {station.name} 水位数据: {len(datas)} 条.")
         return data_dict
 
     # 初始化：获取今年所有水位数据
@@ -39,7 +37,6 @@ class ApiService:
         data_dict = {}
         for station in STATIONS:
             datas = await self.dao.get_year_datas(station["STCD"])
-            data_dict[station["STCD"]] = datas
-            STCD = station["STCD"]
-            logging.info(f"获取到{STATIONS2[str(STCD)]}今年水位数据: {len(datas)} 条.")
+            data_dict[str(station.stcd)] = datas
+            logging.info(f"获取到{station.name}今年水位数据: {len(datas)} 条.")
         return data_dict

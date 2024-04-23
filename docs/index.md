@@ -3,7 +3,7 @@
 layout: home
 
 hero:
-  name: "水文信息"
+  name: "水位信息"
   text: "数据提取自动化"
   tagline: 定时获取水位数据信息供防汛指挥中心大屏使用
   actions:
@@ -11,8 +11,8 @@ hero:
       text: 开发历程
       link: /story/index
     - theme: alt
-      text: 水文站数据表
-      link: /database/table/station
+      text: 水位数据表
+      link: /database/waterlevel
 
 features:
   - title: 需求

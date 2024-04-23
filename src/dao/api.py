@@ -1,7 +1,7 @@
 import logging
 from typing import List
 from json import loads
-from pydantic import BaseModel
+from model.waterlevel import WaterLevelData
 from config.settings import DATE_RANGE_LENGTH
 from util.datetool import (
     DateRange,
@@ -11,12 +11,6 @@ from util.datetool import (
 )
 from util.apiTool import ApiTool
 from util.encodeTool import EncodeTool
-
-
-class WaterLevelData(BaseModel):
-    STCD: int
-    Z: float
-    TM: str
 
 
 class ApiDao:

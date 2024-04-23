@@ -1,12 +1,12 @@
+from typing import List
+from model.seetings import Database, Station
+
+
 # 数据库参数
-DATABASE_CONFIG = {
-    "dev": {
-        "url": "127.0.0.1:6041",
-        "user": "root",
-        "password": "123456",
-        "database": "water",
-    }
-}
+DATABASE_DEV = Database(
+    url="127.0.0.1", port=6041, user="root", password="123456", database="water"
+)
+
 
 # 控制请求数据时间长度范围 (单位: 天)
 DATE_RANGE_LENGTH = {
@@ -18,23 +18,16 @@ DATE_RANGE_LENGTH = {
 REQUEST_INTRVAL: int = 5
 
 # 站点代码和名称
-STATIONS = [
-    {"STCD": 60115400, "NAME": "芜湖"},
-    {"STCD": 62904400, "NAME": "凤凰颈闸下"},
-    {"STCD": 62900700, "NAME": "裕溪闸下"},
-    {"STCD": 62900600, "NAME": "裕溪闸上"},
-    {"STCD": 62906500, "NAME": "清水"},
-    {"STCD": 62905100, "NAME": "新桥闸上"},
+STATIONS: List[Station] = [
+    Station(stcd=60115400, name="芜湖"),
+    Station(stcd=62904400, name="凤凰颈闸下"),
+    Station(stcd=62900700, name="裕溪闸下"),
+    Station(stcd=62900600, name="裕溪闸上"),
+    Station(stcd=62906500, name="清水"),
+    Station(stcd=62905100, name="新桥闸上"),
+    Station(stcd=60115400, name="芜湖"),
 ]
 
-STATIONS2 = {
-    "60115400": "芜湖",
-    "62904400": "凤凰颈闸下",
-    "62900700": "裕溪闸下",
-    "62900600": "裕溪闸上",
-    "62906500": "清水",
-    "62905100": "新桥闸上",
-}
 
 # 三线水位站点
 THREE_LINE = [

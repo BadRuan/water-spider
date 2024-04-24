@@ -18,12 +18,11 @@ REQUEST_INTRVAL: int = 5
 # 站点代码和名称
 STATIONS: List[Station] = [
     Station(stcd=60115400, name="芜湖"),
-    Station(stcd=62904400, name="凤凰颈闸下"),
+    Station(stcd=62904500, name="凤凰颈闸下"),
     Station(stcd=62900700, name="裕溪闸下"),
     Station(stcd=62900600, name="裕溪闸上"),
     Station(stcd=62906500, name="清水"),
     Station(stcd=62905100, name="新桥闸上"),
-    Station(stcd=60115400, name="芜湖"),
 ]
 
 

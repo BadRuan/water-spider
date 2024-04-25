@@ -13,7 +13,7 @@ DATE_RANGE_LENGTH = Date_Range(init=20, normal=1)
 
 
 # 设置获取最新数据请求时间间隔（单位: 分钟）
-REQUEST_INTRVAL: int = 5
+REQUEST_INTRVAL: int = 3
 
 # 站点代码和名称
 STATIONS: List[Station] = [

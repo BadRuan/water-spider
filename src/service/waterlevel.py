@@ -3,18 +3,11 @@ from typing import List
 from dao.waterlevel import WaterlevelDao
 from dao.api import WaterLevelData
 
+
 class WaterlevelService:
 
     def __init__(self) -> None:
         self.dao = WaterlevelDao()
-
-    # 创建水位数据表
-    async def create_waterlevel_table(self) -> int:
-        result = await self.dao.create_waterlevel_table()
-        if result:
-            logging.info("创建水位数据表成功")
-        else:
-            logging.error("创建水位数据表失败")
 
     # 插入水位数据
     async def insert_water_level(self, waterlevels: List[WaterLevelData]) -> int:

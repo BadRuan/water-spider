@@ -12,7 +12,7 @@ class WaterlevelDao:
     async def create_waterlevel_table(self) -> int:
         SQL = """CREATE STABLE IF NOT EXISTS `waterlevel` 
                 (`ts` TIMESTAMP, `current` FLOAT) 
-                TAGS (`STCD` INT, `NAME` BINARY(16))"""
+                TAGS (`stcd` INT, `name` BINARY(16))"""
         return await self.m.execute_sql(SQL)
 
     # 插入水位数据

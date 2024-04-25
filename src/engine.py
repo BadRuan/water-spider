@@ -28,7 +28,6 @@ class App:
             await asyncio.sleep(REQUEST_INTRVAL * 60)
 
     async def first_start(self):
-        self.database.create_waterlevel_table()
         data = await self.api.get_year_datas()
         for item in data:
             await self.database.insert_water_level(data[item])

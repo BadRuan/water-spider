@@ -4,7 +4,7 @@ from model.seetings import Database, Station, Date_Range
 
 # 数据库参数
 DATABASE_DEV = Database(
-    url="127.0.0.1", port=6041, user="root", password="123456", database="water"
+    url="192.168.10.138", port=6041, user="root", password="123456", database="water"
 )
 
 

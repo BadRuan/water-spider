@@ -1,11 +1,9 @@
-from asyncio import run
-from service.api import ApiService
+from test.tdenginetool import TestTDengineTool
+import unittest
 
-
-async def main():
-    api = ApiService()
-    r = await api.get_recently_data()
-    print(type(r))
 
 if __name__ == "__main__":
-    run(main())
+    test_loader = unittest.TestLoader()
+    test_suit = test_loader.loadTestsFromTestCase(TestTDengineTool)
+    test_runner = unittest.TextTestRunner()
+    result = test_runner.run(test_suit)

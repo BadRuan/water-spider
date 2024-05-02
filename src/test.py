@@ -1,9 +1,7 @@
-from test.tdenginetool import TestTDengineTool
-import unittest
-
+from util.datetool import get_target_year_date_range_list
 
 if __name__ == "__main__":
-    test_loader = unittest.TestLoader()
-    test_suit = test_loader.loadTestsFromTestCase(TestTDengineTool)
-    test_runner = unittest.TextTestRunner()
-    result = test_runner.run(test_suit)
+    
+    date_list = get_target_year_date_range_list(2023)
+    for i in date_list:
+        print(i)

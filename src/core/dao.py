@@ -8,7 +8,8 @@ from util.datetool import (
     DateRange,
     get_recently_time_range,
     get_time_range,
-    get_init_data_range_list,
+    get_thisyear_date_range_list,
+    get_target_year_date_range_list,
 )
 from util.apiTool import ApiTool
 from util.encodeTool import EncodeTool
@@ -89,7 +90,16 @@ class ApiDao:
     # 初始化：获取今年所有水位数据
     async def get_year_datas(self, STCD: int) -> List[WaterLevelData]:
         year_data: List[WaterLevelData] = []
-        for date_range in get_init_data_range_list():
+        for date_range in get_thisyear_date_range_list():
+            data = await self.__getDecodeData(STCD, date_range)
+            for d in data:
+                year_data.append(d)
+        return year_data
+
+    # 获取指定年份的所有水位数据
+    async def get_target_year_datas(self, year: int, STCD: int) -> List[WaterLevelData]:
+        year_data: List[WaterLevelData] = []
+        for date_range in get_target_year_date_range_list(year):
             data = await self.__getDecodeData(STCD, date_range)
             for d in data:
                 year_data.append(d)

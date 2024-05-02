@@ -42,6 +42,15 @@ class ApiService:
             logging.info(f"获取到{station.name}今年水位数据: {len(datas)} 条.")
         return data_dict
 
+    # 初始化：获取指定年份所有水位数据
+    async def get_target_year_datas(self, year: int):
+        data_dict = {}
+        for station in STATIONS:
+            datas = await self.dao.get_target_year_datas(year, station.stcd)
+            data_dict[str(station.stcd)] = datas
+            logging.info(f"获取到{year}年 {station.name} 水位数据: {len(datas)} 条.")
+        return data_dict
+
 
 # 插入水位数据
 async def insert_waterlevels(waterlevels: List[WaterLevelData]) -> int:

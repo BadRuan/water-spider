@@ -3,8 +3,7 @@ import asyncio
 from typing import List
 from core.dao import WaterLevelData
 from core.settings import REQUEST_INTRVAL
-from core.service import insert_waterlevels
-from core.service import ApiService
+from core.service import ApiService, insert_waterlevels
 
 
 logging.basicConfig(
@@ -32,5 +31,11 @@ class App:
         for item in data:
             await insert_waterlevels(data[item])
 
+    async def save_targer_year(self):
+        target_year: int = 2024
+        data = await self.api.get_target_year_datas(target_year)
+        for item in data:
+            await insert_waterlevels(data[item])
+
     def start(self):
-        asyncio.run(self.main())
+        asyncio.run(self.save_targer_year())

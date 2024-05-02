@@ -9,6 +9,11 @@ class Database(BaseModel):
     password: str
     database: str
 
+# 日期范围
+class DateRange(BaseModel):
+    btime: str
+    etime: str
+
 
 # 水文站参数格式
 class Station(BaseModel):

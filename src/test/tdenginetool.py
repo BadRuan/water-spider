@@ -1,5 +1,5 @@
 import unittest
-from config.settings import DATABASE_DEV
+from core.settings import DATABASE_DEV
 from util.tdenginetool import TDengineTool
 
 

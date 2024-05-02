@@ -1,5 +1,5 @@
 import taosws
-from config.settings import DATABASE_DEV
+from core.settings import DATABASE_DEV
 
 
 class TDengineTool:

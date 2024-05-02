@@ -1,10 +1,10 @@
 import logging
 import asyncio
 from typing import List
-from dao.api import WaterLevelData
-from config.settings import REQUEST_INTRVAL
-from service.waterlevel import insert_waterlevels
-from service.api import ApiService
+from core.dao import WaterLevelData
+from core.settings import REQUEST_INTRVAL
+from core.service import insert_waterlevels
+from core.service import ApiService
 
 
 logging.basicConfig(

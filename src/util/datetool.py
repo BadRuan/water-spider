@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from pydantic import BaseModel
 from typing import List
-from config.settings import DATE_RANGE_LENGTH
+from core.settings import DATE_RANGE_LENGTH
 
 formatStr = "%Y%m%d%H%M"  # 时间示例: 202401041200
 

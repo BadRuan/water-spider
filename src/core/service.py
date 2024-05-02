@@ -1,6 +1,7 @@
 import logging
-from config.settings import STATIONS, DATE_RANGE_LENGTH
-from dao.api import ApiDao
+from typing import List
+from core.settings import STATIONS, DATE_RANGE_LENGTH
+from core.dao import ApiDao, WaterLevelData, insertWaterlevelToDdatabase
 
 
 class ApiService:
@@ -40,3 +41,24 @@ class ApiService:
             data_dict[str(station.stcd)] = datas
             logging.info(f"获取到{station.name}今年水位数据: {len(datas)} 条.")
         return data_dict
+
+
+# 插入水位数据
+async def insert_waterlevels(waterlevels: List[WaterLevelData]) -> int:
+
+    length = len(waterlevels)
+    if length == 0:
+        logging.info("无水位数据")
+        return 0
+    else:
+        # 数据条目超过1000切片, 防止SQL语句过长
+        def slice_list(data, length):
+            return [data[i : i + length] for i in range(0, len(data), length)]
+
+        sliced_data = slice_list(waterlevels, 1000)
+        count = 0
+        for data in sliced_data:
+            num = await insertWaterlevelToDdatabase(data)
+            count += num
+        logging.info(f"共{length}条数据, 成功插入{count}条数据")
+        return count

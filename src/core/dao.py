@@ -17,7 +17,7 @@ from util.encodeTool import EncodeTool
 
 # 插入水位数据
 async def insertWaterlevelToDdatabase(waterlevels: List[WaterLevelData]) -> int:
-    with TDengineTool() as connect:
+    with TDengineTool() as td:
 
         stcd: int = waterlevels[0].STCD
         name = ""
@@ -30,7 +30,7 @@ async def insertWaterlevelToDdatabase(waterlevels: List[WaterLevelData]) -> int:
                 VALUES"""
         for item in waterlevels:
             SQL += f"('{item.TM}:00.000', {item.Z})"
-        return connect.execute(SQL)
+        return td.execute(SQL)
 
 
 class ApiDao:

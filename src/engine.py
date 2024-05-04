@@ -38,4 +38,4 @@ class App:
             await insert_waterlevels(data[item])
 
     def start(self):
-        asyncio.run(self.save_targer_year())
+        asyncio.run(self.main())

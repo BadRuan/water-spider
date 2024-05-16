@@ -31,11 +31,11 @@ class App:
         for item in data:
             await insert_waterlevels(data[item])
 
-    async def save_targer_year(self):
+    async def save_target_year(self):
         target_year: int = 2024
         data = await self.api.get_target_year_datas(target_year)
         for item in data:
             await insert_waterlevels(data[item])
 
     def start(self):
-        asyncio.run(self.main())
+        asyncio.run(self.save_target_year())

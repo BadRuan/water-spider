@@ -10,7 +10,7 @@ formatStr = "%Y%m%d%H%M"  # 时间示例: 202401041200
 # 输入结束时间，生成指定范围长度的时间范围
 def get_time_range(input_datetime_str: str, day_length: int) -> DateRange:
     if len(input_datetime_str) != 12:
-        raise ValueError("时间长度不对, 参考这个: 202405010000")
+        raise ValueError("时间长度不对, 示例: 202405010000")
     input_datetime = datetime.strptime(input_datetime_str, formatStr)
     if input_datetime > datetime.now():
         input_datetime = datetime.now()
@@ -35,7 +35,7 @@ def get_target_year_date_list(year: int) -> List[DateRange]:
     # 获取当前日期
     current_date = datetime.now()
     if start_date > current_date:
-        return []
+        raise ValueError("目标年份不能晚于当前年份，你是从未来过来的吗？")
     if end_date > current_date:
         end_date = current_date
     # 初始化日期列表和计数器

@@ -9,7 +9,7 @@
 [安徽省水信息系统](http://yc.wswj.net/ahsxx/LOL/?refer=upl&to=public_public)水情信息专题网站水位数据
 
 ## 需求
-爬取指定水文站点指定时间的水文数据并保存至[TDEngine](https://docs.taosdata.com/)数据库中
+爬取指定水文站点指定时间的水文数据并保存至[TDEngine](https://docs.taosdata.com/)数据库
 
 ## 开发进展
 1. 完成加密解密函数
@@ -21,11 +21,6 @@
 7. 完成异步API请求，性能得到提升
 8. 完成[Pydantic](https://docs.pydantic.dev/latest/)数据结构优化
 9. 完成Dockerfile文件编写
-
-## 后续开发计划
-1. 需要完善测试功能
-2. docker compose
-3. 增加单元测试
 
 
 ## Docker 部署

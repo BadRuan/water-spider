@@ -1,13 +1,12 @@
 import logging
 from typing import List
 from json import loads
-from core.settings import STATIONS, DATE_RANGE_LENGTH
+from core.settings import STATIONS
 from core.model import WaterLevelData
 from util.tdenginetool import TDengineTool
 from util.datetool import (
     DateRange,
     get_recently_time_range,
-    get_time_range,
     get_target_year_date_range_list,
 )
 from util.apiTool import ApiTool

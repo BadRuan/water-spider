@@ -8,7 +8,6 @@ from util.datetool import (
     DateRange,
     get_recently_time_range,
     get_time_range,
-    get_thisyear_date_range_list,
     get_target_year_date_range_list,
 )
 from util.apiTool import ApiTool
@@ -18,7 +17,6 @@ from util.encodeTool import EncodeTool
 # 插入水位数据
 async def insertWaterlevelToDdatabase(waterlevels: List[WaterLevelData]) -> int:
     with TDengineTool() as td:
-
         stcd: int = waterlevels[0].STCD
         name = ""
         # 从水文站配置信息中找出站点名
@@ -75,26 +73,6 @@ class ApiDao:
     # 获取最新水位数据
     async def get_recently_data(self, STCD: int) -> List[WaterLevelData]:
         return await self.__getDecodeData(STCD, get_recently_time_range())
-
-    # 获取指定时间的水位数据
-    async def get_target_data(
-        self,
-        STCD: int,
-        input_datetime_str: str,
-        days: int = DATE_RANGE_LENGTH.normal,
-    ) -> List[WaterLevelData]:
-        return await self.__getDecodeData(
-            STCD, get_time_range(input_datetime_str, days)
-        )
-
-    # 初始化：获取今年所有水位数据
-    async def get_year_datas(self, STCD: int) -> List[WaterLevelData]:
-        year_data: List[WaterLevelData] = []
-        for date_range in get_thisyear_date_range_list():
-            data = await self.__getDecodeData(STCD, date_range)
-            for d in data:
-                year_data.append(d)
-        return year_data
 
     # 获取指定年份的所有水位数据
     async def get_target_year_datas(self, year: int, STCD: int) -> List[WaterLevelData]:

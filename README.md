@@ -25,6 +25,6 @@
 
 ## Docker 部署
 ```shell
-docker build -t water_spdier:v2 .
-docker run -itd --name=water-spider --restart=always water_spdier:v2
+docker build -t water_spdier:v3 .
+docker run -itd --name=water-spider --restart=always water_spdier:v3
 ```

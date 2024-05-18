@@ -52,15 +52,6 @@ def get_target_year_date_list(year: int) -> List[DateRange]:
     return dates_list
 
 
-# 获取今年初始化日期范围列表
-def get_thisyear_date_range_list() -> List[DateRange]:
-    this_year = datetime.now().year
-    return [
-        get_time_range(init_day, DATE_RANGE_LENGTH.init)
-        for init_day in get_target_year_date_list(this_year)
-    ]
-
-
 # 获取指定年份的日期列表
 def get_target_year_date_range_list(year: int) -> List[DateRange]:
     return [

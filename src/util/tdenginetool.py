@@ -15,7 +15,6 @@ class TDengineTool:
             self.conn.execute(f"USE {c.database}")
             self.initialized = True
         except BaseException as other:
-            print("exception occur")
             print(other)
 
     def ensure_initialized(self):

@@ -1,6 +1,6 @@
 import logging
 from typing import List
-from core.settings import STATIONS, DATE_RANGE_LENGTH
+from core.settings import STATIONS
 from core.dao import ApiDao, WaterLevelData, insertWaterlevelToDdatabase
 
 
@@ -10,46 +10,20 @@ class ApiService:
         self.dao = ApiDao()
 
     # 获取最新水位数据
-    async def get_recently_data(self) -> list:
-        data_dict = {}
+    async def save_recently_data(self) -> None:
         for station in STATIONS:
-            datas = await self.dao.get_recently_data(station.stcd)
-            data_dict[str(station.stcd)] = datas
-            logging.info(f"获取到{station.name}近期水位数据: {len(datas)} 条.")
-        return data_dict
-
-    # 获取指定时间的水位数据
-    async def get_target_data(
-        self,
-        input_datetime_str: str,
-        days: int = DATE_RANGE_LENGTH.normal,
-    ):
-        data_dict = {}
-        for station in STATIONS:
-            datas = await self.dao.get_target_data(
-                station.stcd, input_datetime_str, days
-            )
-            data_dict[str(station.stcd)] = datas
-            logging.info(f"获取 {station.name} 水位数据: {len(datas)} 条.")
-        return data_dict
-
-    # 初始化：获取今年所有水位数据
-    async def get_year_datas(self):
-        data_dict = {}
-        for station in STATIONS:
-            datas = await self.dao.get_year_datas(station.stcd)
-            data_dict[str(station.stcd)] = datas
-            logging.info(f"获取到{station.name}今年水位数据: {len(datas)} 条.")
-        return data_dict
+            datas: List[WaterLevelData] = await self.dao.get_recently_data(station.stcd)
+            count: int = await insert_waterlevels(datas)
+            logging.info(f"获取{station.name}近期水位{len(datas)}条, 保存{count}条")
 
     # 初始化：获取指定年份所有水位数据
-    async def get_target_year_datas(self, year: int):
-        data_dict = {}
+    async def save_target_year_datas(self, year: int) -> None:
         for station in STATIONS:
-            datas = await self.dao.get_target_year_datas(year, station.stcd)
-            data_dict[str(station.stcd)] = datas
-            logging.info(f"获取到{year}年 {station.name} 水位数据: {len(datas)} 条.")
-        return data_dict
+            datas: List[WaterLevelData] = await self.dao.get_target_year_datas(
+                year, station.stcd
+            )
+            count: int = await insert_waterlevels(datas)
+            logging.info(f"获取{year}年{station.name}水位{len(datas)}条, 保存{count}条")
 
 
 # 插入水位数据
@@ -69,5 +43,5 @@ async def insert_waterlevels(waterlevels: List[WaterLevelData]) -> int:
         for data in sliced_data:
             num = await insertWaterlevelToDdatabase(data)
             count += num
-        logging.info(f"共{length}条数据, 成功插入{count}条数据")
+
         return count

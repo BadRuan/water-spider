@@ -24,9 +24,9 @@ class App:
             await asyncio.sleep(REQUEST_INTRVAL * 60)
 
     async def save_target_year(self):
-        target_year: int = 2022
+        target_year: int = 2024
         await self.service.save_target_year_datas(target_year)
         
 
     def start(self):
-        asyncio.run(self.save_target_year())
+        asyncio.run(self.main())

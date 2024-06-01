@@ -24,6 +24,7 @@
 7. 完成Asyncio异步API请求，性能得到提升
 8. 完成[Pydantic](https://docs.pydantic.dev/latest/)数据结构优化
 9. 完成Dockerfile文件编写
+10. 虚拟环境由 virtualenv 转换为 pipenv
 
 
 ## Docker 部署

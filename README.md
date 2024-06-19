@@ -26,8 +26,15 @@
 9. 完成Dockerfile文件编写
 10. 虚拟环境由 virtualenv 转换为 pipenv
 
+## 开发环境复刻
+使用pipenv工具：
+```shell
+pipenv install
+pipenv shell
+```
 
-## Docker 部署
+
+## 生产环境部署：Docker
 ```shell
 docker build -t water_spdier:v3 .
 docker run -itd --name=water-spider --restart=always water_spdier:v3

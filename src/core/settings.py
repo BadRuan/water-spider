@@ -4,7 +4,7 @@ from core.model import Database, Station, Date_Range
 
 # 数据库参数
 DATABASE_DEV = Database(
-    url="tdengine", port=6041, user="root", password="123456", database="water"
+    url="tdengine", port=6041, user="root", password="tdengine", database="water"
 )
 
 

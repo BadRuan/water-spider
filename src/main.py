@@ -1,9 +1,6 @@
-import logging
-from engine import App
-
-logger = logging.getLogger(__name__)
-app = App()
+from utils.config_loader import Config
 
 
 if __name__ == "__main__":
-    app.start()
+    Config("dev")
+    

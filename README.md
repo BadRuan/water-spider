@@ -1,22 +1,16 @@
-# 水文站数据爬虫
+# 水位信息爬虫
 
 ![Static Badge](https://img.shields.io/badge/Python-3.12-blue)
 
 ## 目标站点
 
-[安徽省水信息系统](http://yc.wswj.net/ahsxx/LOL/?refer=upl&to=public_public)水情信息专题网站水位数据
+[安徽省水信息系统](http://yc.wswj.net/ahsxx/LOL/?refer=upl&to=public_public)**水情信息**专题网站水位数据
 
-## 需求
+## 功能
 
 爬取指定水文站点指定时间的水文数据并保存至[TDEngine](https://docs.taosdata.com/)数据库
 
 ## 安装
-
-### pip
-
-```shell
-pip install -r requirements.txt
-```
 
 ### pipenv
 
@@ -25,9 +19,8 @@ pipenv install
 pipenv shell
 ```
 
-## 生产环境部署：Docker
+## 重构进展
 
-```shell
-docker build -t water_spdier:latest .
-docker run -itd --name=water-spider --restart=always water_spdier:latest
-```
+1. 完成日志功能
+2. unittest单元测试功能
+3. 设计模式重构

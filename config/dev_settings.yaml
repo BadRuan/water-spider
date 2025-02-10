@@ -1,0 +1,27 @@
+mode: dev
+
+database:
+  url: tdengine
+  port: 6041
+  user: root
+  password: tdengine
+  database: water
+
+
+date_range_length:
+  init: 10
+  normal: 1
+
+stations:
+  - stcd: 60115400
+    name: 芜湖
+  - stcd: 62904500
+    name: 凤凰颈闸下
+  - stcd: 62900700
+    name: 裕溪闸下
+  - stcd: 62900600
+    name: 裕溪闸上
+  - stcd: 62906500
+    name: 清水
+  - stcd: 62905100
+    name: 新桥闸上

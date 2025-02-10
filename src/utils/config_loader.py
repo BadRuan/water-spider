@@ -1,8 +1,8 @@
-from utils.logger_tool import setup_logger
+from utils.logger import Logger
 from yaml import safe_load, YAMLError
 from pathlib import Path
 
-logger = setup_logger(__name__)
+logger = Logger(__name__)
 
 
 def Singleton(cls):

@@ -1,4 +1,8 @@
 import base64
+from utils.logger import Logger
+
+
+logger = Logger(__name__)
 
 
 # 解密请求参数工具类
@@ -18,7 +22,9 @@ class DecodeTool:
 
     def _decode(self, encrypted_data: str) -> str:
         if not encrypted_data or encrypted_data[:3] != self.version:
-            raise ValueError("后台版本不一致或无效的加密数据！")
+            message: str = "后台版本不一致或无效的加密数据！"
+            logger.error(message)
+            raise ValueError(message)
 
         versioned_data = encrypted_data[3:]
         base64_decoded = base64.b64decode(versioned_data.encode("utf-8"))

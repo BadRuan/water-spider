@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import List
 from model import ConfigDateRange, RequestDateRange
-from utils.logger_tool import setup_logger
+from utils.logger import setup_logger
 from utils.config_loader import Config
 
 

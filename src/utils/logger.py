@@ -4,7 +4,7 @@ from pathlib import Path
 from logging.handlers import TimedRotatingFileHandler
 
 
-def setup_logger(name: str):
+def Logger(name: str):
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
 

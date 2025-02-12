@@ -1,10 +1,10 @@
 mode: dev
 
 database:
-  url: tdengine
+  host: 192.168.3.2
   port: 6041
   user: root
-  password: tdengine
+  password: Deepseek666
   database: water
 
 

@@ -1,14 +1,9 @@
-from spiders.base_spider import BaseSpider
-from spiders.api_spider import ApiSpider
-from parsers.base_parser import BaseParser
-from parsers.api_parser import ApiParser
+from storages.database_storage import DatabaseStorage
 
 
 if __name__ == "__main__":
-    spider: BaseSpider = ApiSpider()
-    parser: BaseParser = ApiParser()
+    storage = DatabaseStorage()
 
-    # respose_data = spider.get_response()
-    decode_str = parser.translate("2.1cnRldQ==")
-
-    print(decode_str)
+    with DatabaseStorage() as storage:
+        count = storage.execute("SELECT count(*) FROM `waterlevel` LIMIT 20")
+        print(count)

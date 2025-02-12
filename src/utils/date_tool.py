@@ -1,11 +1,11 @@
 from datetime import datetime, timedelta
 from typing import List
 from model import ConfigDateRange, RequestDateRange
-from utils.logger import setup_logger
-from utils.config_loader import Config
+from utils.logger import Logger
+from config.configuration import Config
 
 
-logger = setup_logger(__name__)
+logger = Logger(__name__)
 formatStr = "%Y%m%d%H%M"  # 时间示例: 202401041200
 
 

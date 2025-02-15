@@ -20,6 +20,7 @@ yarl = "==1.9.4"
 pyyaml = "*"
 taos = "*"
 taospy = "*"
+requests = "*"
 
 [dev-packages]
 

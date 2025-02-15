@@ -4,6 +4,19 @@ from utils.logger import Logger
 logger = Logger(__name__)
 
 
+# 单例模式装饰器
+def Singleton(cls):
+    _instance = {}
+
+    def _singleton(*args, **kwargs):
+        if cls not in _instance:
+            _instance[cls] = cls(*args, **kwargs)
+        return _instance[cls]
+
+    return _singleton
+
+
+@Singleton
 class WaterSecurity:
     def __init__(self):
         self.version = "2.1"

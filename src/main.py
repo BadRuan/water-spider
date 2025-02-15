@@ -1,9 +1,9 @@
-from storages.database_storage import DatabaseStorage
+from spiders.api_spdier import ApiSpider
+from model import DataWaterlevel
 
 
 if __name__ == "__main__":
-    storage = DatabaseStorage()
-
-    with DatabaseStorage() as storage:
-        count = storage.execute("SELECT count(*) FROM `waterlevel` LIMIT 20")
-        print(count)
+    spdier = ApiSpider()
+    # spdier.get_data()
+    data_waterlevel: DataWaterlevel = spdier.get_data()
+    print(data_waterlevel)

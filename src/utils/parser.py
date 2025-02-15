@@ -1,7 +1,6 @@
 from json import loads, JSONDecodeError
 from typing import List
 from model import WaterLevel, DataWaterlevel
-from parsers.base_parser import BaseParser
 from config.settings import MODE
 from config.configuration import Configuration
 from utils.water_security import WaterSecurity
@@ -11,7 +10,7 @@ from utils.logger import Logger
 logger = Logger(__name__)
 
 
-class ApiParser(BaseParser):
+class Parser():
     def __init__(self):
         super().__init__()
         self.config = Configuration(MODE)
@@ -29,6 +28,8 @@ class ApiParser(BaseParser):
 
     def translate(self, data: str) -> DataWaterlevel:
         try:
+            _r = loads(data)
+            data = _r['data'] # 从响应内容取出加密数据内容
             json_text: str = self.tool.decode(data)
             json_obj = loads(json_text)
             data_sw = json_obj["data_sw"]
@@ -39,7 +40,7 @@ class ApiParser(BaseParser):
 
             data: List[WaterLevel] = []
 
-            for i in data_sw[:10]:
+            for i in data_sw[:10]: # 此处记得修改 
                 data.append(WaterLevel(z=i["Z"], tm=i["TM"]))
             stcd: int = int(data_sw[0]["STCD"])
             name = self._getStationName(stcd)

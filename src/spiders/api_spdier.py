@@ -46,11 +46,10 @@ class ApiSpider(SpierSubject):
             _msg: str = f"网络异常或服务器未响应，状态码为: {r.status_code}"
             logger.error(_msg)
             raise ValueError(_msg)
-        sleep(2)
         data_waterlevel: DataWaterlevel = self.parser.translate(r.text)
         return data_waterlevel
 
     def get_recently_data(self) -> List[DataWaterlevel]:
         date_range: RequestDateRange = self.datetool.get_recently_time_range()
         stations: List = self.config.getStations()
-        return [self.get_data(station, date_range) for station in stations[0]]
+        return [self.get_data(station, date_range) for station in stations]

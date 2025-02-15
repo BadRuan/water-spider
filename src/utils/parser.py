@@ -21,10 +21,10 @@ class Parser:
         for station in stations:
             if stcd == station["stcd"]:
                 return station["name"]
-            else:
-                _msg = f"配置文件无此站点{stcd} 信息"
-                logger.error(_msg)
-                raise ValueError(_msg)
+            
+        _msg = f"配置文件无此站点{stcd} 信息"
+        logger.error(_msg)
+        raise ValueError(_msg)
 
     def translate(self, data: str) -> DataWaterlevel:
         try:
@@ -44,7 +44,7 @@ class Parser:
 
             count: int = len(data_sw)
             if 0 == count:
-                _msg: str = "返回{name}站[{stcd}]:0条水位数据"
+                _msg: str = "返回0条水位数据"
                 logger.error(_msg)
                 raise ValueError(_msg)
             

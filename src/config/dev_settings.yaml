@@ -9,7 +9,7 @@ database:
 
 
 date_range_length:
-  init: 10
+  init: 20
   normal: 1
 
 stations:

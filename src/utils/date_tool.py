@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from typing import List
 from model import ConfigDateRange, RequestDateRange
 from utils.logger import Logger
-from config.configuration import Config
+from config.configuration import Configuration
 
 
 logger = Logger(__name__)
@@ -12,7 +12,7 @@ formatStr = "%Y%m%d%H%M"  # 时间示例: 202401041200
 class DateTool:
     def __init__(self, env: str = "dev"):
         self.env: str = env
-        date_config: ConfigDateRange = Config(self.env).value["date_range_length"]
+        date_config: ConfigDateRange = Configuration(self.env).value["date_range_length"]
         self.normal: int = date_config["normal"]
         self.init: int = date_config["init"]
 

@@ -1,27 +1,23 @@
 from datetime import datetime, timedelta
 from typing import List
-from model import ConfigDateRange, RequestDateRange
+from model import RequestDateRange
 from utils.logger import Logger
-from config.configuration import Configuration
+from config.configuration import getDefaultDateRange, getInitDateRange
 
 
 logger = Logger(__name__)
-formatStr = "%Y%m%d%H%M"  # 时间示例: 202401041200
+formatStr = "%Y%m%d%H%M"
 
 
 class DateTool:
-    def __init__(self, env: str = "dev"):
-        self.env: str = env
-        date_config: ConfigDateRange = Configuration(self.env).value["date_range_length"]
-        self.normal: int = date_config["normal"]
-        self.init: int = date_config["init"]
+    def __init__(self):
+        self.normal: int = getDefaultDateRange()
+        self.init: int = getInitDateRange()
 
     def get_time_range(
         self, input_datetime_str: str, day_length: int
     ) -> RequestDateRange:
         try:
-            logger.debug(f"输入时间: {input_datetime_str}, 时间长度: {day_length} 天")
-            # 验证输入日期长度
             if len(input_datetime_str) != 12:
                 raise ValueError("输入时间长度错误")
             # 将输入时间由字符串转化为python标准格式的时间
@@ -36,10 +32,8 @@ class DateTool:
                 btime=days_ago.strftime(formatStr),
                 etime=input_datetime.strftime(formatStr),
             )
-        except ValueError as error:
-            logger.error(error)
         except Exception as error:
-            logger.error(f"get_time_range 执行异常")
+            logger.error(error)
 
     # 获取最近时间范围
     def get_recently_time_range(self) -> RequestDateRange:
@@ -64,11 +58,12 @@ class DateTool:
         # 循环生成每隔day天的日期直到达到或超过当前日期
         while start_date <= end_date:
             next_date = start_date + timedelta(days=self.init * count)
-            dates_list.append(next_date.strftime("%Y%m%d%H%M"))
+            dates_list.append(next_date.strftime(formatStr))
             # 检查下一个日期是否已经超过了当前日期
             if next_date > end_date:
                 break
             count += 1
+        del dates_list[0] # 删除上年末日期
         return dates_list
 
     # 获取指定年份的日期列表
@@ -77,3 +72,4 @@ class DateTool:
             self.get_time_range(init_day, self.init)
             for init_day in self._get_target_year_date_list(year)
         ]
+        

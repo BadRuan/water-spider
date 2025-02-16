@@ -1,60 +1,46 @@
 from typing import List
-from yaml import safe_load, YAMLError
-from pathlib import Path
 from utils.logger import Logger
+from model import DatabaseConfig, StationConfig
+from config.settings import DATABASE_DEV, STATIONS, DEFAULT_DATE_RANGE, INIT_DATE_RANGE
 
 logger = Logger(__name__)
 
 
-def Singleton(cls):
-    _instance = {}
-
-    def _singleton(*args, **kwargs):
-        if cls not in _instance:
-            _instance[cls] = cls(*args, **kwargs)
-        return _instance[cls]
-
-    return _singleton
+def getStations() -> List[StationConfig]:
+    count: int = len(STATIONS)
+    if 0 == count:
+        _msg = f"配置文件settings.py中站点信息为空, 请检查确认"
+        logger.error(_msg)
+        raise ValueError(_msg)
+    return STATIONS
 
 
-@Singleton
-class Configuration:
-    value = None
+def getStationName(stcd: int) -> str:
+    stations: List[StationConfig] = getStations()
+    for station in stations:
+        if stcd == station.stcd:
+            return station.name
 
-    def __init__(self, env: str = "dev"):
-        try:
-            file_name: str = f"{env}_settings.yaml"
-            config_path: str = Path(__file__).parent.parent / f"config" / file_name
-            with open(config_path, mode="r", encoding="utf-8") as file:
-                logger.info(f"配置文件 {file_name} 解析成功")
-                self.value = safe_load(file)
-        except YAMLError as error:
-            logger.error(f"配置文件格式异常：{error}")
-        except FileNotFoundError as error:
-            logger.error(f"配置文件{config_path}不存在")
-        except PermissionError as error:
-            logger.error(f"配置文件无读取权限")
-        except IOError as error:
-            logger.error(f"配置文件读取失败: {error}")
-        except Exception as error:
-            logger.error(f"配置文件读取失败: {error}")
+    _msg = f"配置无站点{stcd} 的配置信息"
+    logger.error(_msg)
+    raise ValueError(_msg)
 
-    def getStations(self) -> List:
-        try:
-            if None == self.value:
-                _msg = "配置为空，请确认配置文件内容"
-                logger.error(_msg)
-                raise ValueError(_msg)
-            return self.value["stations"]
-        except ValueError:
-            logger.error("无法从配置文件读取站点信息")
 
-    def getDatabase(self):
-        try:
-            if None == self.value:
-                _msg = "配置为空，请确认配置文件内容"
-                logger.error(_msg)
-                raise ValueError(_msg)
-            return self.value["database"]
-        except ValueError:
-            logger.error("无法从配置文件读取数据库配置信息")
+def getDatabase() -> DatabaseConfig:
+    return DATABASE_DEV
+
+
+def getDefaultDateRange() -> int:
+    if DEFAULT_DATE_RANGE < 1:
+        _msg = f"日期范围不能小于1天"
+        logger.error(_msg)
+        raise ValueError(_msg)
+    return DEFAULT_DATE_RANGE
+
+
+def getInitDateRange() -> int:
+    if INIT_DATE_RANGE < 1:
+        _msg = f"日期范围不能小于1天"
+        logger.error(_msg)
+        raise ValueError(_msg)
+    return INIT_DATE_RANGE

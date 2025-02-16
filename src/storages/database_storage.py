@@ -1,6 +1,6 @@
 import taosws
-from config.settings import MODE
-from config.configuration import Configuration
+from model import DatabaseConfig
+from config.configuration import getDatabase
 from utils.logger import Logger
 
 
@@ -14,10 +14,10 @@ class DatabaseStorage:
 
     def init_connect(self):
         try:
-            _dbc = Configuration(MODE).getDatabase()
-            dsn = f"taosws://{_dbc["user"]}:{_dbc["password"]}@{_dbc["host"]}:{_dbc["port"]}"
+            _dbc: DatabaseConfig = getDatabase()
+            dsn = f"taosws://{_dbc.user}:{_dbc.password}@{_dbc.url}:{_dbc.port}"
             self.conn = taosws.connect(dsn)
-            self.conn.execute(f"USE {_dbc["database"]}")
+            self.conn.execute(f"USE {_dbc.database}")
             logger.info("数据库已连接")
             self.initialized = True
         except Exception:

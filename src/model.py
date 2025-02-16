@@ -2,9 +2,17 @@ from pydantic import BaseModel
 from typing import List
 
 
-class ConfigDateRange(BaseModel):
-    init: int
-    normal: int
+class DatabaseConfig(BaseModel):
+    url: str
+    port: int
+    user: str
+    password: str
+    database: str
+
+
+class StationConfig(BaseModel):
+    stcd: int
+    name: str
 
 
 class RequestDateRange(BaseModel):

@@ -3,7 +3,7 @@ from model import DatabaseConfig, StationConfig
 
 
 DATABASE_DEV = DatabaseConfig(
-    url="192.168.3.2", port=6041, user="root", password="Deepseek666", database="water"
+    url="tdengine", port=6041, user="root", password="Deepseek666", database="water"
 )
 
 # 默认请求日期范围

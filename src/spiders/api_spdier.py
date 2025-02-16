@@ -1,25 +1,20 @@
 from requests import post
-from typing import List
-from time import sleep
+from model import DataWaterlevel, RequestDateRange
 from utils.parser import Parser
 from utils.water_security import WaterSecurity
 from utils.date_tool import DateTool
 from utils.logger import Logger
-from config.configuration import Configuration
-from model import DataWaterlevel, RequestDateRange
-from spiders.base_spdier import SpierSubject
 
 
 logger = Logger(__name__)
 
 
-class ApiSpider(SpierSubject):
+class ApiSpider:
     def __init__(self):
         super().__init__()
         self.water_security = WaterSecurity()
         self.parser = Parser()
         self.datetool = DateTool()
-        self.config = Configuration()
         self.headers = {
             "Accept": "application/json, text/javascript, */*; q=0.01",
             "Accept-Language": "zh-CN,zh;q=0.9",
@@ -41,6 +36,13 @@ class ApiSpider(SpierSubject):
             "sttp": self.water_security.encode("ZQ"),
             "waterEncode": self.water_security.encode("true"),
         }
+        # 解决新桥闸上参数不一致问题
+        if stcd == 62905100:
+            playload["name"] = self.water_security.encode("GetSwLineAndZX")
+            playload["sttp"] = self.water_security.encode("DD")
+            playload["zxstcd"] = self.water_security.encode("62905200")
+            playload["zxsttp"] = self.water_security.encode("ZZ")
+
         r = post(url=self.url, headers=self.headers, data=playload, verify=False)
         if 200 != r.status_code:
             _msg: str = f"网络异常或服务器未响应，状态码为: {r.status_code}"
@@ -48,8 +50,3 @@ class ApiSpider(SpierSubject):
             raise ValueError(_msg)
         data_waterlevel: DataWaterlevel = self.parser.translate(r.text)
         return data_waterlevel
-
-    def get_recently_data(self) -> List[DataWaterlevel]:
-        date_range: RequestDateRange = self.datetool.get_recently_time_range()
-        stations: List = self.config.getStations()
-        return [self.get_data(station, date_range) for station in stations]

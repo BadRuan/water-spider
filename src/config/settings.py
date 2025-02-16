@@ -7,8 +7,8 @@ DATABASE_DEV = DatabaseConfig(
 )
 
 # 默认请求日期范围
-DEFAULT_DATE_RANGE: int = 1
-INIT_DATE_RANGE: int = 20
+DEFAULT_DATE_RANGE: int = 2
+INIT_DATE_RANGE: int = 25
 
 # 站点代码和名称
 STATIONS: List[StationConfig] = [

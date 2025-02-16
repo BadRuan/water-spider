@@ -3,6 +3,7 @@ from tests.test_date_tool import TestDateTool
 from tests.test_configruation import TestConfiguration
 from tests.test_parser import TestParser
 from tests.test_storage import TestStorage
+from tests.test_spider import TestSpider
 
 
 if __name__ == "__main__":
@@ -17,7 +18,9 @@ if __name__ == "__main__":
         TestConfiguration("test_getStationName"),
         TestConfiguration("test_getDateRange"),
         TestParser("test_translate"),
-        TestStorage("test_query")
+        TestStorage("test_connect"),
+        TestStorage("test_insert_waterlevel"),
+        TestSpider("test_get_all_station_recently_data")
     ]
     suite.addTests(case_list)
 

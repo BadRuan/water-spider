@@ -1,5 +1,6 @@
 import taosws
-from model import DatabaseConfig
+from typing import List
+from model import DatabaseConfig, DataWaterlevel, WaterLevel
 from config.configuration import getDatabase
 from utils.logger import Logger
 
@@ -39,3 +40,21 @@ class DatabaseStorage:
     def query(self, sql):
         self.ensure_initialized()
         return self.conn.query(sql)
+
+    def insert_waterlevel(self, data_waterlevel: DataWaterlevel):
+        # 防止数据过多拼接sql语句过长，对数据进行切片处理
+        def slice_list(data: List, length: int = 1000):
+            return [data[i : i + length] for i in range(0, len(data), length)]
+
+        SQL = f"""INSERT INTO t{data_waterlevel.stcd}
+                USING waterlevel TAGS({data_waterlevel.stcd}, '{data_waterlevel.name}')
+                VALUES"""
+
+        slice_data: List[WaterLevel] = slice_list(data_waterlevel.data)
+
+        for waterlevel_list in slice_data:
+            sql = SQL
+            for waterlevel in waterlevel_list:
+                sql += f"('{waterlevel.tm}:00.000', {waterlevel.z})"
+
+            self.query(sql)

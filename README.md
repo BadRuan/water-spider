@@ -23,3 +23,4 @@ pipenv shell
 
 1. 完成日志功能
 2. unittest单元测试功能
+3. 使用uv管理项目

@@ -1,0 +1,12 @@
+[project]
+name = "water-spider"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "apscheduler>=3.11.0",
+    "pydantic>=2.10.6",
+    "requests>=2.32.3",
+    "taos-ws-py>=0.3.9",
+]

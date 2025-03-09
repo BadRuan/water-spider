@@ -27,7 +27,7 @@ class Engine:
                 storage.insert_waterlevel(dataWaterlevel)
                 logger.info(f"{station.name}[{station.stcd}]水位数据已保存")
                 logger.info(f"等待11秒, 执行后续任务")
-                sleep(11)
+                sleep(5)
         logger.info(f"爬虫运行结束")
 
     def init(self, year: int = 2025):

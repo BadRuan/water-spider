@@ -1,12 +1,11 @@
 from time import sleep
-from typing import List
-from model import DataWaterlevel, RequestDateRange
+from model import DataWaterlevel
 from utils.date_tool import DateTool
 from utils.logger import Logger
 from config.configuration import getStations
 from spiders.api_spdier import ApiSpider
 from storages.database_storage import DatabaseStorage
-
+from config.settings import LIMIT_SECOND
 
 logger = Logger(__name__)
 
@@ -26,9 +25,10 @@ class Engine:
                 )
                 storage.insert_waterlevel(dataWaterlevel)
                 logger.info(f"{station.name}[{station.stcd}]水位数据已保存")
-                logger.info(f"等待11秒, 执行后续任务")
-                sleep(5)
-        logger.info(f"爬虫运行结束")
+                logger.info(f"等待{LIMIT_SECOND}秒, 执行后续任务")
+                sleep(LIMIT_SECOND)
+
+        logger.info(f"本次爬虫运行结束")
 
     def init(self, year: int = 2025):
         logger.info(f"开始爬虫任务")
@@ -44,6 +44,7 @@ class Engine:
                     )
                     storage.insert_waterlevel(dataWaterlevel)
                     logger.info(f"{station.name}[{station.stcd}]水位数据已保存")
-                    logger.info(f"等待5秒, 执行后续任务")
-                    sleep(5)
-        logger.info(f"爬虫运行结束")
+                    logger.info(f"等待{LIMIT_SECOND}秒, 执行后续任务")
+                    sleep(LIMIT_SECOND)
+
+        logger.info(f"年度爬虫任务运行结束")

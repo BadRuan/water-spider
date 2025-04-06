@@ -3,12 +3,21 @@ from model import DatabaseConfig, StationConfig
 
 
 DATABASE_DEV = DatabaseConfig(
-    url="tdengine", port=6041, user="root", password="Deepseek666", database="water"
+    url="*",
+    port=6041,
+    user="root",
+    password="Deepseek666",
+    database="water",
 )
 
 # 默认请求日期范围
 DEFAULT_DATE_RANGE: int = 2
 INIT_DATE_RANGE: int = 25
+
+# 防止请求频次高，对目标服务器压力过大
+LIMIT_SECOND: int = 7  # 单次请求间隔时间 :秒
+LIMIT_frequency: int = 297  # 爬虫循环周期间隔 :秒
+
 
 # 站点代码和名称
 STATIONS: List[StationConfig] = [

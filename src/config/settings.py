@@ -8,6 +8,7 @@ DATABASE_DEV = DatabaseConfig(
     user="root",
     password="Deepseek666",
     database="water",
+    timezone="Asia/Shanghai"
 )
 
 # 默认请求日期范围

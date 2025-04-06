@@ -8,6 +8,7 @@ class DatabaseConfig(BaseModel):
     user: str
     password: str
     database: str
+    timezone: str
 
 
 class StationConfig(BaseModel):

@@ -16,7 +16,7 @@ class DatabaseStorage:
     def init_connect(self):
         try:
             _dbc: DatabaseConfig = getDatabase()
-            dsn = f"taosws://{_dbc.user}:{_dbc.password}@{_dbc.url}:{_dbc.port}"
+            dsn = f"taosws://{_dbc.user}:{_dbc.password}@{_dbc.url}:{_dbc.port}?tz={_dbc.timezone}"
             self.conn = taosws.connect(dsn)
             self.conn.execute(f"USE {_dbc.database}")
             logger.info("数据库已连接")

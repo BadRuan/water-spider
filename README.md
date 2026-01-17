@@ -12,15 +12,8 @@
 
 ## 安装
 
-### pipenv
+### uv
 
 ```shell
-pipenv install
-pipenv shell
+uv run src/main.py
 ```
-
-## 重构进展
-
-1. 完成日志功能
-2. unittest单元测试功能
-3. 使用uv管理项目

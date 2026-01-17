@@ -9,5 +9,6 @@ if __name__ == "__main__":
     engine = Engine()
     while True:
         engine.run()
+        # engine.init(2025)
         logger.info(f"间隔{LIMIT_frequency}秒, 执行下趟任务")
         sleep(LIMIT_frequency)

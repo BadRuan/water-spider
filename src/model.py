@@ -1,33 +1,10 @@
-from pydantic import BaseModel
-from typing import List
+from dataclasses import dataclass
 
 
-class DatabaseConfig(BaseModel):
-    url: str
-    port: int
-    user: str
-    password: str
-    database: str
-    timezone: str
+@dataclass
+class RequestDateRange:
+    start_time: str
+    end_time: str
 
-
-class StationConfig(BaseModel):
-    stcd: int
-    name: str
-
-
-class RequestDateRange(BaseModel):
-    btime: str
-    etime: str
-
-
-class WaterLevel(BaseModel):
-    z: float
-    tm: str
-
-
-class DataWaterlevel(BaseModel):
-    name: str
-    stcd: int
-    count: int
-    data: List[WaterLevel]
+    def __str__(self):
+        return f"请求日期范围: {self.start_time} -> {self.end_time}"

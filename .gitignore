@@ -1,8 +1,7 @@
-cache/
-logs/
+/logs
+__pycache__
+.venv
+.pytest_cache
 .vscode
 .idea
 .DS_Store
-__pycache__
-ENV
-*.log

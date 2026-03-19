@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
-from typing import List
+from typing import List, Optional
 from model import RequestDateRange
 from utils.logger import Logger
-from config.configuration import getDefaultDateRange, getInitDateRange
+from config.settings import Default_Date_Range, Init_Date_Range
+
 
 
 logger = Logger(__name__)
@@ -11,32 +12,35 @@ formatStr = "%Y%m%d%H%M"
 
 class DateTool:
     def __init__(self):
-        self.normal: int = getDefaultDateRange()
-        self.init: int = getInitDateRange()
+        self.normal: int = Default_Date_Range
+        self.init: int = Init_Date_Range
 
     def get_time_range(
         self, input_datetime_str: str, day_length: int
-    ) -> RequestDateRange:
+    ) -> Optional[RequestDateRange]:
         try:
+            # 验证输入时间长度
             if len(input_datetime_str) != 12:
-                raise ValueError("输入时间长度错误")
-            # 将输入时间由字符串转化为python标准格式的时间
+                message = "时间长度错误"
+                logger.error(message)
+                raise ValueError(message)
+            # 验证时间是否晚于当前时间
             input_datetime = datetime.strptime(input_datetime_str, formatStr)
-            # 防止大于当前时间
             if input_datetime > datetime.now():
-                logger.warning(f"输入时间 {input_datetime_str} 晚于当前时间")
-                input_datetime = datetime.now()
+                message = f"输入时间 {input_datetime_str} 晚于当前时间"
+                logger.error(message)
+                raise ValueError(message)
             # 确定开始时间
             days_ago = input_datetime - timedelta(days=day_length)
             return RequestDateRange(
-                btime=days_ago.strftime(formatStr),
-                etime=input_datetime.strftime(formatStr),
+                start_time=days_ago.strftime(formatStr),
+                end_time=input_datetime.strftime(formatStr),
             )
         except Exception as error:
             logger.error(error)
 
     # 获取最近时间范围
-    def get_recently_time_range(self) -> RequestDateRange:
+    def get_recently_time_range(self) -> Optional[RequestDateRange]:
         now_time: str = datetime.now().strftime(formatStr)
         return self.get_time_range(now_time, self.normal)
 
@@ -67,7 +71,7 @@ class DateTool:
         return dates_list
 
     # 获取指定年份的日期列表
-    def get_target_year_date_range_list(self, year: int) -> List[RequestDateRange]:
+    def get_target_year_date_range_list(self, year: int) -> List[Optional[RequestDateRange]]:
         return [
             self.get_time_range(init_day, self.init)
             for init_day in self._get_target_year_date_list(year)

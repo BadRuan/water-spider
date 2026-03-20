@@ -4,7 +4,6 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://makeapullrequest.com)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 ![Static Badge](https://img.shields.io/badge/Python-3.12-blue)
-![https://img.shields.io/badge/UV-20B2AA?style=for-the-badge](https://hellowac.github.io/uv-zh-cn/#script-support)
 
 ## What Is This?
 
@@ -62,3 +61,5 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+请求水位数据日期范围思路，如计划获取2025年某站整年水位数据，日期范围无法直接设置20250101-20251231，需要按日期范围进行分割。可以按照分割长度进行分割，然后合并目标，最后再保存，数据量大，保存也可以分割，暂定使用生成器解决。

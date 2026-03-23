@@ -8,7 +8,7 @@ logger = Logger(__name__)
 
 class TestHandler():
     def test_hanle(self):
-        for station in STATIONS[1:2]:
+        for station in STATIONS:
             request: Request = Request(station=station,date_range=RequestDateRange(start_time='202601010000',end_time='202601020000'))
             
             api_handle: Handler = SendApiHandler()

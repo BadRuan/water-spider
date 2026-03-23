@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 from requests import post
-from model import Request
-from utils.logger import Logger
-from utils.parser import Parser
-from utils.security import WaterSecurity
+from src.model import Request
+from src.utils.logger import Logger
+from src.utils.security import encode, translate
 
 
 logger = Logger(__name__)
@@ -40,21 +39,22 @@ class SendApiHandler(Handler):
         self.url = "http://61.191.22.196:5566/AHSXX/service/PublicBusinessHandler.ashx"
     
     def handle(self, request: Request) -> str | None:
-        water_security = WaterSecurity()
         playload = {
-            "name": water_security.encode("GetSwLineMap"),
-            "stcd": water_security.encode(str(request.code)),
-            "btime": water_security.encode(request.date_range.start_time),
-            "etime": water_security.encode(request.date_range.end_time),
-            "sttp": water_security.encode("ZQ"),
-            "waterEncode": water_security.encode("true"),
+            "name": encode("GetSwLineMap"),
+            "stcd": encode(str(request.code)),
+            "btime": encode(request.date_range.start_time),
+            "etime": encode(request.date_range.end_time),
+            "sttp": encode("ZQ"),
+            "waterEncode": encode("true"),
         }
-        # 解决新桥闸上参数不一致问题
-        if request.code == 62905100:
-            playload["name"] = water_security.encode("GetSwLineAndZX")
-            playload["sttp"] = water_security.encode("DD")
-            playload["zxstcd"] = water_security.encode("62905200")
-            playload["zxsttp"] = water_security.encode("ZZ")
+        if request.code == 62900600: # 解决裕溪闸上参数不一致问题
+            playload["sttp"] = encode("DD")
+        
+        if request.code == 62905100: # 解决新桥闸上参数不一致问题
+            playload["name"] = encode("GetSwLineAndZX")
+            playload["sttp"] = encode("DD")
+            playload["zxstcd"] = encode("62905200")
+            playload["zxsttp"] = encode("ZZ")
         
         r = post(url=self.url, headers=self.headers, data=playload, verify=False)
         if 200 != r.status_code:
@@ -68,8 +68,7 @@ class SendApiHandler(Handler):
 class DecodeHandler(Handler):
     def handle(self, request: Request) -> str | None:
         if request.encode_date is not None:
-            parser = Parser()
-            request.data = parser.translate(request.encode_date)
+            request.data = translate(request.encode_date)
         if self._successor:
             self._successor.handle(request)
             

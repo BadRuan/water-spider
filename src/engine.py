@@ -1,7 +1,7 @@
 from typing import List
 from datetime import datetime
 from time import sleep
-from src.config.settings import STATIONS, DATE_SETTINGS
+from src.settings import STATIONS, DATE_SETTINGS
 from src.utils.logger import Logger
 from src.utils.datetool import get_time_range, formatStr
 from src.model import RequestDateRange, Request

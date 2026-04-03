@@ -1,7 +1,7 @@
-from src.config.settings import STATIONS
+from src.settings import STATIONS
 from src.utils.logger import Logger
 from src.model import RequestDateRange, Request
-from src.handle import Handler, SendApiHandler, DecodeHandler, ChoiceHandler
+from src.handle import Handler, SendApiHandler, DecodeHandler
 
 
 logger = Logger(__name__)
@@ -13,10 +13,8 @@ class TestHandler():
             
             api_handle: Handler = SendApiHandler()
             decode_handle: Handler = DecodeHandler()
-            choice_handle: Handler = ChoiceHandler()
             
             api_handle.set_next(decode_handle)
-            decode_handle.set_next(choice_handle)
             
             api_handle.handle(request)
             

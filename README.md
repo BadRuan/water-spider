@@ -30,30 +30,4 @@
 
 Python**队列**思路雏形:
 
-```python
-from rich.console import Console
-import queue
-from time import sleep
-
-
-console = Console()
-q = queue.Queue()
-
-q.put(1)
-q.put(2)
-q.put(3)
-q.put(4)
-
-def main():
-    while True:
-        console.print("准备拿数据")
-        if q.empty() != True:
-            console.print("队列有数据，可以拿")
-            console.print(f"成功拿到数据: {q.get()}")
-        else:
-            console.print("队列无数据，不用拿")
-        console.print("休息 2 秒,再执行下次动作")
-        sleep(2)
-```
-
 请求水位数据日期范围思路，如计划获取2025年某站整年水位数据，日期范围无法直接设置20250101-20251231，需要按日期范围进行分割。可以按照分割长度进行分割，然后合并目标，最后再保存，数据量大，保存也可以分割，暂定使用生成器解决。

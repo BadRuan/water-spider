@@ -6,24 +6,17 @@ class DateSetting(NamedTuple):
     latest_date_length: int
     cut_date_length: int
     
-    def __str__(self) -> str:
-        return f"默认最近水位时间长度{self.latest_date_length}天, 整年水位切片时间 {self.cut_date_length}天."
+@dataclass
+class WaterItem:
+    height: float
+    timestamp: str
 
 class Station(NamedTuple):
     code: int
     name: str
+    water_items: List[WaterItem]
     
-    def __str__(self) -> str:
-        return f"站点名称:{self.name} 站点代码:{self.code}"
-
-@dataclass
-class WaterLevel:
-    height: float
-    tm: str
     
-    def __str__(self) -> str:
-        return f"时间: {self.tm} => 高程: {self.height}"
-
 @dataclass
 class RequestDateRange:
     start_time: str
@@ -38,7 +31,7 @@ class Request:
         self.name: str = station.name
         self.date_range: RequestDateRange = date_range
         self.encode_date: Optional[str] = None
-        self.data: List[WaterLevel] = []
+        self.data: List[WaterItem] = []
 
     def __str__(self) -> str:
         info: str = f"{self.name} 站水位数据"

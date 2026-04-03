@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 from src.model import RequestDateRange
 from src.utils.logger import Logger
-from src.config.settings import DATE_SETTINGS
+from src.settings import DATE_SETTINGS
 
 
 logger = Logger(__name__)

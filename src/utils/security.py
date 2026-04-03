@@ -1,7 +1,7 @@
 from json import loads
 from typing import List
 import base64
-from src.model import WaterLevel
+from src.model import WaterItem
 from src.utils.logger import Logger
 
 
@@ -218,6 +218,7 @@ def encode_uri_component(s: str) -> str:
 
     return urllib.parse.quote(s, safe="~()*!.'")
 
+@Singleton
 class DecodeTool:
     def __init__(self, version: str = "2.1") -> None:
         self.version = version
@@ -252,12 +253,12 @@ class DecodeTool:
     def decrypt(self, encrypted_text: str) -> str:
         return self._decode(encrypted_text)
 
-
+@Singleton
 class Parser:
     def __init__(self):
         self.tool = WaterSecurity()
 
-    def translate(self, data: str) -> List[WaterLevel]:
+    def translate(self, data: str) -> List[WaterItem]:
         _r = loads(data)
         # 通过响应码 respCode 判断响应是否成功
         respCode: str = _r["respCode"]
@@ -270,7 +271,7 @@ class Parser:
         decode_str: str = self.tool.decode(encode_str)
         json_obj = loads(decode_str)
         data_sw: List = json_obj["data_sw"]
-        return [WaterLevel(height=i["Z"], tm=i["TM"]) for i in data_sw]
+        return [WaterItem(height=i["Z"], timestamp=i["TM"]) for i in data_sw]
 
 encode = WaterSecurity().encode
 decode = DecodeTool().decrypt

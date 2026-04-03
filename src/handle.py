@@ -8,7 +8,6 @@ from src.utils.security import encode, translate
 
 logger = Logger(__name__)
 
-
 class Handler(ABC):
     def __init__(self, successor: Optional['Handler'] = None):
         self._successor = successor
@@ -72,11 +71,3 @@ class DecodeHandler(Handler):
         if self._successor:
             self._successor.handle(request)
             
-class ChoiceHandler(Handler):
-    def handle(self, request: Request) -> str | None:
-        count: int = len(request.data)
-        if count > 100:
-            logger.debug("摘除前100条数据")
-            request.data = request.data[100:]
-        if self._successor:
-            self._successor.handle(request)

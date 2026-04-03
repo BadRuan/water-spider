@@ -2,13 +2,10 @@
 
 [![GitHub stars](https://img.shields.io/github/stars/BadRuan/water-spider?style=social)](https://github.com/BadRuan/water-spider)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://makeapullrequest.com)
-[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
-![Static Badge](https://img.shields.io/badge/Python-3.12-blue)
-![https://img.shields.io/badge/UV-20B2AA?style=for-the-badge](https://hellowac.github.io/uv-zh-cn/#script-support)
 
 ## What Is This?
 
-[安徽省水信息系统](http://yc.wswj.net/ahsxx/LOL/?refer=upl&to=public_public)**水情信息**专题网站水位数据爬虫
+[安徽省水信息系统](http://ahswj.cn/ahsxx/LOL/?refer=upl&to=public_public)**水情信息**专题网站水位数据爬虫
 
 爬取指定水文站点指定时间水文数据并保存至[PostgreSQL](https://www.postgresql.org/)数据库
 
@@ -18,7 +15,7 @@
 
 ## 构思备忘
 
-使用队列，数据单向流动，使用责任链设计模式：
+使用队列，数据单向流动，使用**责任链设计模式**：
 
 1. 目标期望
 2. API参数构建（构建加密请求）
@@ -33,32 +30,4 @@
 
 Python**队列**思路雏形:
 
-```python
-from rich.console import Console
-import queue
-from time import sleep
-
-
-console = Console()
-q = queue.Queue()
-
-q.put(1)
-q.put(2)
-q.put(3)
-q.put(4)
-
-def main():
-    while True:
-        console.print("准备拿数据")
-        if q.empty() != True:
-            console.print("队列有数据，可以拿")
-            console.print(f"成功拿到数据: {q.get()}")
-        else:
-            console.print("队列无数据，不用拿")
-        console.print("休息 2 秒,再执行下次动作")
-        sleep(2)
-
-
-if __name__ == "__main__":
-    main()
-```
+请求水位数据日期范围思路，如计划获取2025年某站整年水位数据，日期范围无法直接设置20250101-20251231，需要按日期范围进行分割。可以按照分割长度进行分割，然后合并目标，最后再保存，数据量大，保存也可以分割，暂定使用生成器解决。

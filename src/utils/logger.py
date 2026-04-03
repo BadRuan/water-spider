@@ -1,5 +1,4 @@
 import logging
-import sys
 from pathlib import Path
 from logging.handlers import TimedRotatingFileHandler
 from rich.logging import RichHandler

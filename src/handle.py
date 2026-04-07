@@ -4,6 +4,7 @@ from requests import post
 from src.model import Request
 from src.utils.logger import Logger
 from src.utils.security import encode, translate
+from src.utils.storage import PostgresStorage
 
 
 logger = Logger(__name__)
@@ -25,6 +26,7 @@ class Handler(ABC):
 class SendApiHandler(Handler):
     def __init__(self, successor: Handler | None = None):
         super().__init__(successor)
+        # 默认请求头
         self.headers = {
             "Accept": "application/json, text/javascript, */*; q=0.01",
             "Accept-Language": "zh-CN,zh;q=0.9",
@@ -37,7 +39,8 @@ class SendApiHandler(Handler):
         }
         self.url = "http://61.191.22.196:5566/AHSXX/service/PublicBusinessHandler.ashx"
     
-    def handle(self, request: Request) -> str | None:
+    def handle(self, request: Request) -> Optional[str]:
+        # 构建请求参数
         playload = {
             "name": encode("GetSwLineMap"),
             "stcd": encode(str(request.code)),
@@ -46,9 +49,13 @@ class SendApiHandler(Handler):
             "sttp": encode("ZQ"),
             "waterEncode": encode("true"),
         }
+        if request.code == 62904400:
+            playload["name"] = encode("GetSwLineAndZX")
+            playload["sttp"] = encode("DD")
+            playload["zxstcd"] = encode("62904500")
+            playload["zxsttp"] = encode("ZQ")
         if request.code == 62900600: # 解决裕溪闸上参数不一致问题
             playload["sttp"] = encode("DD")
-        
         if request.code == 62905100: # 解决新桥闸上参数不一致问题
             playload["name"] = encode("GetSwLineAndZX")
             playload["sttp"] = encode("DD")
@@ -65,9 +72,14 @@ class SendApiHandler(Handler):
             self._successor.handle(request)
             
 class DecodeHandler(Handler):
-    def handle(self, request: Request) -> str | None:
+    def handle(self, request: Request) -> Optional[str]:
         if request.encode_date is not None:
-            request.data = translate(request.encode_date)
+            request.data += translate(request.encode_date)
         if self._successor:
             self._successor.handle(request)
-            
+
+class StorageHandle(Handler):
+    def handle(self, request: Request) -> Optional[str]:
+        if len(request.data) > 0:
+            with PostgresStorage() as storage:
+                storage.insert_waterlevel(request)

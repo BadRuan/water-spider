@@ -1,7 +1,11 @@
 from typing import List
 from psycopg2 import connect as pq_connect
-from model import WaterItem, Station
-from settings import postgres
+from src.model import WaterItem, Request
+from src.settings import postgres
+from src.utils.logger import Logger
+
+
+log = Logger(__name__)
 
 
 class PostgresStorage():   
@@ -19,7 +23,6 @@ class PostgresStorage():
             self.cursor.close()
         if self.connection is not None:
             self.connection.close()
-   
     
     def ensure_initialized(self):
         if self.initialized is None:
@@ -27,7 +30,6 @@ class PostgresStorage():
             
     def execute(self) -> None:
         self.ensure_initialized()
-
 
     def init_connect(self):
         self.connection = pq_connect(host=postgres.url, user=postgres.user, password=postgres.password, port=postgres.port, database=postgres.database)
@@ -40,7 +42,16 @@ class PostgresStorage():
             self.cursor.execute(sql)
             self.connection.commit()
         
-    def query(self, sql: str) -> List:
+        
+    def query_one(self, sql: str):
+        self.execute()
+        if self.cursor is not None:
+            self.cursor.execute(sql)
+            return self.cursor.fetchone()
+        else:
+            return ''
+        
+    def query_all(self, sql: str) -> List:
         self.execute()
         if self.cursor is not None:
             self.cursor.execute(sql)
@@ -48,21 +59,41 @@ class PostgresStorage():
         else:
             return []
     
-    def insert_waterlevel(self, station: Station):
+    def insert_waterlevel(self, request: Request):
         # 防止数据过多拼接sql语句过长，对数据进行切片处理
-        def slice_list(data: List, length: int = 1000):
+        def slice_list(data: List[WaterItem], length: int = 1000) -> List[List[WaterItem]]:
             return [data[i : i + length] for i in range(0, len(data), length)]
 
-        SQL = f"""INSERT INTO station_{station.code} (ts, height)
+        SQL = f"""INSERT INTO station_{request.code} (ts, height)
                 VALUES"""
 
-        if len(station.water_items) > 0:
+        if len(request.data) > 0:
 
-            slice_data: List[WaterItem] = slice_list(station.water_items) # type: ignore
+            slice_data: List[List[WaterItem]] = slice_list(request.data)
             
             for wateritem_list in slice_data:
                 sql = SQL
-                for water_item in wateritem_list: # type: ignore
+                for water_item in wateritem_list:
                     sql += f"('{water_item.timestamp}', {water_item.height}),"
-                sql= sql[:-1] + "ON CONFLICT (ts) DO NOTHING;"
-                self.save(sql + ";")
+                sql= sql[:-1] + " ON CONFLICT (ts) DO NOTHING;"
+                self.save(sql)
+
+    def get_total_count(self) -> int:
+        sql: str = 'select count(*) from station;'
+        result = self.query_one(sql)
+        if result == None:
+            return 0
+        else:
+            return int(result[0])
+
+def recoder_count_change(func):
+    def wrap(*args, **kwargs):
+        with PostgresStorage() as storage:
+            old_count: int = storage.get_total_count()
+            result = func(*args, **kwargs)
+            new_count: int = storage.get_total_count()
+            change_int: int = new_count - old_count
+            log.info(f"实际新增 {change_int} 条水位数据")
+            return result
+    return wrap
+        

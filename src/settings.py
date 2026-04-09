@@ -1,6 +1,5 @@
 from typing import NamedTuple, List, Tuple
 from model import DateSetting, Station
-from os import getenv
 
 
 class DataConfig(NamedTuple):
@@ -11,24 +10,7 @@ class DataConfig(NamedTuple):
     database: str
     
 
-def get_database_config(debug: bool = False) -> DataConfig:
-    host: str = ''
-    user: str = ''
-    password: str = ''
-    port: int = 5432
-    
-    if debug == False:
-        _host = getenv('POST_HOST')
-        _user = getenv('POST_USER')
-        _password = getenv('POST_PASS')
-        _port = getenv('POST_PORT')
-        if _host is not None and _user is not None and _password is not None and _port is not None:
-            host, user, password, port = _host, _user, _password, int(_port)
-            return DataConfig(url=host, user=user, password=password, port= port, database='water')
-        else:
-            return DataConfig(url='100.95.218.65', user='postgres', password='E,*f*YdGgYSgqfze1tLqc0Pm8CK2', port=44455, database='water') 
-    else:
-        return DataConfig(url='100.95.218.65', user='postgres', password='E,*f*YdGgYSgqfze1tLqc0Pm8CK2', port=44455, database='water') 
+postgres = DataConfig(url='100.95.218.64', user='postgres', password='E,*f*YdGgYSgqfze1tLqc0Pm8CK2', port=44455, database='water') 
         
 
 DATE_SETTINGS = DateSetting(latest_date_length=2, cut_date_length=20)

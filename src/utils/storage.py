@@ -2,11 +2,10 @@ from typing import List
 from psycopg2 import connect as pq_connect
 from model import WaterItem, Request
 from utils.logger import Logger
-from settings import get_database_config
+from settings import postgres
 
 
 log = Logger(__name__)
-postgres = get_database_config(debug=False)
 
 
 class PostgresStorage():   

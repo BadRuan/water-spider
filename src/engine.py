@@ -1,12 +1,13 @@
 from typing import List
 from datetime import datetime
 from time import sleep
-from src.settings import STATIONS 
-from src.utils.logger import Logger
-from src.utils.datetool import get_time_range, formatStr
-from src.utils.storage import recoder_count_change
-from src.model import DateRange, Request
-from src.handle import Handler, SendApiHandler, DecodeHandler, StorageHandle
+from random import randint
+from settings import STATIONS 
+from utils.logger import Logger
+from utils.datetool import get_time_range, formatStr
+from utils.storage import recoder_count_change
+from model import DateRange, Request
+from handle import Handler, SendApiHandler, DecodeHandler, StorageHandle
 
 
 log = Logger(__name__)
@@ -31,15 +32,16 @@ class Spider:
                 _count: int = len(request.data)
                 count += _count
                 log.info(f"成功获取{request.name} {_count} 条数据")
-                sleep(0.5)
+                sleep(2.5)
             log.info(f"本轮共同获取 {count} 条水位数据")
 
     def run_in_24_hour(self):
         while True:
             target_date: List[DateRange] = get_time_range(end_datetime_str=None,start_datetime_str=None)
             self._get_data(target_date)
-            log.info("休息 5 秒继续")
-            sleep(5)
+            rand_number: int = randint(100, 600)
+            log.info(f"休息 {rand_number} 秒继续")
+            sleep(rand_number)
 
     def get_this_year_full_data(self):
         now: datetime = datetime.now()

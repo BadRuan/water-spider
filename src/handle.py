@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 from requests import post
-from src.model import Request
-from src.utils.logger import Logger
-from src.utils.security import encode, translate
-from src.utils.storage import PostgresStorage
+from model import Request
+from utils.logger import Logger
+from utils.security import encode, translate
+from utils.storage import PostgresStorage
 
 
 logger = Logger(__name__)

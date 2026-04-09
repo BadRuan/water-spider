@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import List, Optional
-from src.model import DateRange
-from src.settings import DATE_SETTINGS
+from model import DateRange
+from settings import DATE_SETTINGS
 
 
 formatStr = "%Y%m%d%H%M"

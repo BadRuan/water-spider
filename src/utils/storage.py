@@ -1,4 +1,5 @@
 from typing import List
+from itertools import batched
 from psycopg2 import connect as pq_connect
 from model import WaterItem, Request
 from utils.logger import Logger
@@ -60,18 +61,11 @@ class PostgresStorage():
             return []
     
     def insert_waterlevel(self, request: Request):
-        # 防止数据过多拼接sql语句过长，对数据进行切片处理
-        def slice_list(data: List[WaterItem], length: int = 1000) -> List[List[WaterItem]]:
-            return [data[i : i + length] for i in range(0, len(data), length)]
-
         SQL = f"""INSERT INTO station_{request.code} (ts, height)
                 VALUES"""
 
         if len(request.data) > 0:
-
-            slice_data: List[List[WaterItem]] = slice_list(request.data)
-            
-            for wateritem_list in slice_data:
+            for wateritem_list in batched(request.data, n=1000):
                 sql = SQL
                 for water_item in wateritem_list:
                     sql += f"('{water_item.timestamp}', {water_item.height}),"

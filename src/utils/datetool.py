@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
-from typing import List, Optional
+from typing import List, Optional, Final
 from model import DateRange
 from settings import DATE_SETTINGS
 
 
-formatStr = "%Y%m%d%H%M"
+formatStr: Final[str] = "%Y%m%d%H%M"
 
 def get_time_range(start_datetime_str: Optional[str], end_datetime_str: Optional[str]) -> List[DateRange]:
     now_time: datetime = datetime.now()

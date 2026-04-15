@@ -2,9 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 from requests import post
 from model import Request
-from utils.logger import Logger
-from utils.security import encode, translate
-from utils.storage import PostgresStorage
+from utils import Logger, encode, translate, Storage
 
 
 logger = Logger(__name__)
@@ -81,5 +79,5 @@ class DecodeHandler(Handler):
 class StorageHandle(Handler):
     def handle(self, request: Request) -> Optional[str]:
         if len(request.data) > 0:
-            with PostgresStorage() as storage:
+            with Storage() as storage:
                 storage.insert_waterlevel(request)

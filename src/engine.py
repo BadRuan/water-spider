@@ -3,9 +3,7 @@ from datetime import datetime
 from time import sleep
 from random import randint
 from settings import STATIONS 
-from utils.logger import Logger
-from utils.datetool import get_time_range, formatStr
-from utils.storage import recoder_count_change
+from utils import Logger, get_time_range, formatStr, recoder_count_change
 from model import DateRange, Request
 from handle import Handler, SendApiHandler, DecodeHandler, StorageHandle
 

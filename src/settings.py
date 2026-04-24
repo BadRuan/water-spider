@@ -1,4 +1,4 @@
-from typing import NamedTuple, List, Tuple
+from typing import NamedTuple, List, Tuple, Generator
 from model import DateSetting, Station
 
 
@@ -9,13 +9,13 @@ class DataConfig(NamedTuple):
     port: int
     database: str
     
+type station_list_type = List[Tuple[int, str]]
 
-postgres = DataConfig(url='100.95.218.64', user='postgres', password='E,*f*YdGgYSgqfze1tLqc0Pm8CK2', port=44455, database='water') 
+postgres = DataConfig(url='100.68.9.83', user='postgres', password='Deepseek666', port=54321, database='water') 
         
-
 DATE_SETTINGS = DateSetting(latest_date_length=2, cut_date_length=20)
 
-station_list: List[Tuple[int, str]] = [
+station_list: station_list_type = [
     (60115400,"芜湖"),
     (62904400,"凤凰颈新站闸上"),
     (62904500,"凤凰颈新站闸下"),
@@ -25,4 +25,4 @@ station_list: List[Tuple[int, str]] = [
     (62905100,"新桥闸上")
 ]
 
-STATIONS = [Station(code=station[0], name=station[1], water_items=[]) for station in station_list]
+stations = [Station(code=station[0], name=station[1], water_items=[]) for station in station_list]

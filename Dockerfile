@@ -1,4 +1,4 @@
-FROM docker.1ms.run/library/python:latest
+FROM docker.1ms.run/library/python:3.12
 WORKDIR /var/lib/app
 COPY src .
 RUN pip install --trusted-host https://mirrors.huaweicloud.com -i https://mirrors.huaweicloud.com/repository/pypi/simple -r requirements.txt 

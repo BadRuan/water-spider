@@ -1,66 +1,58 @@
-from typing import List
+from typing import List, Any, Optional
 from itertools import batched
-from psycopg2 import connect as pq_connect
-from model import WaterItem, Request
-from utils.logger import Logger
+from asyncpg import connect
 from settings import postgres
+from model import Request
+from utils.logger import Logger
 
 
 log = Logger(__name__)
 
-
-class PostgresStorage():   
+class Storage():   
     def __init__(self) -> None:
         self.connection = None
-        self.cursor = None
         self.initialized = None
     
-    def __enter__(self):
-        self.ensure_initialized()
+    async def __aenter__(self):
+        await self.ensure_initialized()
         return self
     
-    def __exit__(self, exc_type, exc, tb):
-        if self.cursor is not None:
-            self.cursor.close()
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
         if self.connection is not None:
-            self.connection.close()
+            await self.connection.close()
     
-    def ensure_initialized(self):
+    async def ensure_initialized(self):
         if self.initialized is None:
-            self.init_connect()
+            await self.init_connect()
             
-    def execute(self) -> None:
-        self.ensure_initialized()
-
-    def init_connect(self):
-        self.connection = pq_connect(host=postgres.url, user=postgres.user, password=postgres.password, port=postgres.port, database=postgres.database)
-        if self.connection is not None:    
-            self.cursor = self.connection.cursor()
-              
-    def save(self, sql: str) -> None:
-        self.execute()
-        if self.cursor is not None and self.connection is not None:
-            self.cursor.execute(sql)
-            self.connection.commit()
-        
-        
-    def query_one(self, sql: str):
-        self.execute()
-        if self.cursor is not None:
-            self.cursor.execute(sql)
-            return self.cursor.fetchone()
+    async def init_connect(self):
+        self.connection = await connect(host=postgres.url, user=postgres.user, password=postgres.password, port=postgres.port, database=postgres.database, server_settings={
+            'timezone': 'UTC'  # 设置时区，例如 'UTC' 或 'Asia/Shanghai'
+        })
+                   
+    async def query_one(self, sql: str) -> Optional[Any]:
+        if self.connection is not None:
+            result = await self.connection.fetchrow(sql)
+            if result is None:
+                return None
+            else:
+                return result
         else:
-            return ''
+            return None
         
-    def query_all(self, sql: str) -> List:
-        self.execute()
-        if self.cursor is not None:
-            self.cursor.execute(sql)
-            return self.cursor.fetchall()
+    async def query_list(self, sql: str) -> List[Any]:
+        if self.connection is not None:
+            return await self.connection.fetch(sql)
         else:
             return []
     
-    def insert_waterlevel(self, request: Request):
+    async def save(self, sql: str) -> int:
+        if self.connection is not None:
+            return await self.connection.execute(sql)
+        else:
+            return 0
+    
+    async def insert_waterlevel(self, request: Request):
         SQL = f"""INSERT INTO station_{request.code} (ts, height)
                 VALUES"""
 
@@ -70,22 +62,22 @@ class PostgresStorage():
                 for water_item in wateritem_list:
                     sql += f"('{water_item.timestamp}', {water_item.height}),"
                 sql= sql[:-1] + " ON CONFLICT (ts) DO NOTHING;"
-                self.save(sql)
+                await self.save(sql)
 
-    def get_total_count(self) -> int:
+    async def get_total_count(self) -> int:
         sql: str = 'select count(*) from station;'
-        result = self.query_one(sql)
+        result = await self.query_one(sql)
         if result == None:
             return 0
         else:
             return int(result[0])
 
-def recoder_count_change(func):
-    def wrap(*args, **kwargs):
-        with PostgresStorage() as storage:
-            old_count: int = storage.get_total_count()
+async def recoder_count_change(func):
+    async def wrap(*args, **kwargs):
+        async with Storage() as storage:
+            old_count: int = await storage.get_total_count()
             result = func(*args, **kwargs)
-            new_count: int = storage.get_total_count()
+            new_count: int = await  storage.get_total_count()
             change_int: int = new_count - old_count
             log.info(f"实际新增 {change_int} 条水位数据")
             return result

@@ -16,9 +16,9 @@ class Handler(ABC):
         return handler
 
     @abstractmethod
-    def handle(self, request: Request) -> Optional[str]:
+    async def handle(self, request: Request) -> Optional[str]:
         if self._successor:
-            return self._successor.handle(request)
+            return await self._successor.handle(request)
         return None
 
 class SendApiHandler(Handler):
@@ -37,7 +37,7 @@ class SendApiHandler(Handler):
         }
         self.url = "http://61.191.22.196:5566/AHSXX/service/PublicBusinessHandler.ashx"
     
-    def handle(self, request: Request) -> Optional[str]:
+    async def handle(self, request: Request) -> Optional[str]:
         # 构建请求参数
         playload = {
             "name": encode("GetSwLineMap"),
@@ -67,17 +67,17 @@ class SendApiHandler(Handler):
             raise ValueError(_msg)
         request.encode_date =  r.text
         if self._successor:
-            self._successor.handle(request)
+            await self._successor.handle(request)
             
 class DecodeHandler(Handler):
-    def handle(self, request: Request) -> Optional[str]:
+    async def handle(self, request: Request) -> Optional[str]:
         if request.encode_date is not None:
             request.data += translate(request.encode_date)
         if self._successor:
-            self._successor.handle(request)
+            await self._successor.handle(request)
 
 class StorageHandle(Handler):
-    def handle(self, request: Request) -> Optional[str]:
+    async def handle(self, request: Request) -> Optional[str]:
         if len(request.data) > 0:
-            with Storage() as storage:
-                storage.insert_waterlevel(request)
+            async with Storage() as storage:
+                await storage.insert_waterlevel(request)

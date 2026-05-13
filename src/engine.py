@@ -1,4 +1,4 @@
-from typing import List, Generator
+from typing import List, AsyncGenerator
 from datetime import datetime
 from time import sleep
 from random import randint
@@ -11,7 +11,7 @@ from handle import Handler, SendApiHandler, DecodeHandler, StorageHandle
 log = Logger(__name__)
 
 
-def get_data(target_daterange: List[DateRange]) -> None:
+async def get_data(target_daterange: List[DateRange]) -> None:
     count: int = 0
     for date_time in target_daterange:
         log.info("---------------------")
@@ -24,7 +24,7 @@ def get_data(target_daterange: List[DateRange]) -> None:
             api_handle.set_next(decode_handle)
             decode_handle.set_next(storage_handle)
             
-            api_handle.handle(request)
+            await api_handle.handle(request)
             _count: int = len(request.data)
             count += _count
             log.info(f"获取到 {request.name} {_count} 条数据")
@@ -32,37 +32,37 @@ def get_data(target_daterange: List[DateRange]) -> None:
         log.info(f"本轮共获取 {count} 条水位数据")
 
 
-def GenData() -> Generator[None, None, None]:
+async def GenData() -> AsyncGenerator:
     while True:
         target_daterange: List[DateRange] = get_time_range(end_datetime_str=None,start_datetime_str=None)
-        get_data(target_daterange)
+        await get_data(target_daterange)
         yield
 
 class Spider:
 
-    def run_in_24_hour(self):
+    async def run_in_24_hour(self):
         gen = GenData()
         while True:
-            next(gen)
+            await anext(gen)
             rand_number: int = randint(100, 600)
             log.info(f"{rand_number} 秒后开始下轮数据提取")
             sleep(rand_number)
 
-    def get_this_year_full_data(self):
+    async def get_this_year_full_data(self):
         now: datetime = datetime.now()
         this_year_start: datetime = datetime(now.year, 1, 1)
         target_daterange: List[DateRange] = get_time_range(end_datetime_str=now.strftime(formatStr),start_datetime_str=this_year_start.strftime(formatStr))
-        get_data(target_daterange)
+        await get_data(target_daterange)
     
-    def get_target_year_full_data(self, year: int):
+    async def get_target_year_full_data(self, year: int):
         year_start: datetime = datetime(year, 1, 1)
         year_end: datetime = datetime(year, 12, 31)
         target_daterange: List[DateRange] = get_time_range(end_datetime_str=year_end.strftime(formatStr),start_datetime_str=year_start.strftime(formatStr))
-        get_data(target_daterange)
+        await get_data(target_daterange)
 
-    def get_target_daterange_range_data(self, start_time: str, end_time: str):
+    async def get_target_daterange_range_data(self, start_time: str, end_time: str):
         target_daterange: List[DateRange] = get_time_range(start_time, end_time)
-        get_data(target_daterange)
+        await get_data(target_daterange)
 
            
 spider = Spider()

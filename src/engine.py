@@ -1,6 +1,6 @@
+from asyncio import sleep
 from typing import List, AsyncGenerator
 from datetime import datetime
-from time import sleep
 from random import randint
 from settings import stations
 from utils import Logger, get_time_range, formatStr
@@ -28,7 +28,7 @@ async def get_data(target_daterange: List[DateRange]) -> None:
             _count: int = len(request.data)
             count += _count
             log.info(f"获取到 {request.name} {_count} 条数据")
-            sleep(randint(1,4))
+            await sleep(randint(1,4))
         log.info(f"本轮共获取 {count} 条水位数据")
 
 
@@ -46,7 +46,7 @@ class Spider:
             await anext(gen)
             rand_number: int = randint(100, 600)
             log.info(f"{rand_number} 秒后开始下轮数据提取")
-            sleep(rand_number)
+            await sleep(rand_number)
 
     async def get_this_year_full_data(self):
         now: datetime = datetime.now()

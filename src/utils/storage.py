@@ -62,6 +62,7 @@ class Storage():
                 for water_item in wateritem_list:
                     sql += f"('{water_item.timestamp}', {water_item.height}),"
                 sql= sql[:-1] + " ON CONFLICT (ts) DO NOTHING;"
+                # log.info(sql)
                 await self.save(sql)
 
     async def get_total_count(self) -> int:

@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 from requests import post
-from model import Request
-from utils import Logger, encode, translate, Storage
+from src.model import Request
+from src.utils import Logger, encode, translate, insert_waterlevel
 
 
 logger = Logger(__name__)
@@ -79,5 +79,4 @@ class DecodeHandler(Handler):
 class StorageHandle(Handler):
     async def handle(self, request: Request) -> Optional[str]:
         if len(request.data) > 0:
-            async with Storage() as storage:
-                await storage.insert_waterlevel(request)
+            await insert_waterlevel(request)

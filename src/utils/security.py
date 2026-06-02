@@ -1,8 +1,8 @@
 from json import loads
 from typing import List
 import base64
-from model import WaterItem
-from utils.logger import Logger
+from src.model import WaterItem
+from src.utils.logger import Logger
 
 
 logger = Logger(__name__)

@@ -1,18 +1,22 @@
-from typing import NamedTuple, List, Tuple, Generator
-from model import DateSetting, Station
+from typing import List, Tuple
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from src.model import DateSetting, Station
 
 
-class DataConfig(NamedTuple):
-    url: str
-    user: str
-    password: str
-    port: int
-    database: str
+class Settings(BaseSettings):
+    DATABASE_URL: str = 'postgresql://user:pass@localhost:5432/dbname'
+    TIMEZONE: str = 'UTC'
+    
+    model_config = SettingsConfigDict(
+        env_file= '.env',
+        env_file_encoding= 'utf-8',
+        extra= 'ignore'
+    )
+
+settings = Settings()
     
 type station_list_type = List[Tuple[int, str]]
-
-postgres = DataConfig(url='100.122.72.21', user='postgres', password='E,*f*YdGgYSgqfze1tLqc0Pm8CK2', port=36999, database='water') 
-        
+     
 DATE_SETTINGS = DateSetting(latest_date_length=2, cut_date_length=20)
 
 station_list: station_list_type = [

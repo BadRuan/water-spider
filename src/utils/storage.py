@@ -1,3 +1,5 @@
+import re
+from datetime import datetime
 from typing import List, Any, Optional
 from itertools import batched
 from asyncpg import create_pool, Pool
@@ -18,7 +20,7 @@ async def init_db_pool():
     if _db_pool is None:
         async def set_timezone(connection):
             await connection.execute(f"SET TIME ZONE '{settings.TIMEZONE}';")
-        
+
         _db_pool = await create_pool(
             dsn=settings.DATABASE_URL,
             min_size=2,          # 最小连接数
@@ -39,59 +41,51 @@ async def get_db_connection():
     """获取连接的上下文管理器，从全局池中借用和归还连接"""
     if not _db_pool:
         raise RuntimeError("数据库连接池未初始化，请先调用 init_db_pool()")
-    
+
     async with _db_pool.acquire() as conn:
-        yield conn  
-                   
+        yield conn
+
 async def query_one(sql: str) -> Optional[Any]:
     async with get_db_connection() as conn:
-        result = await conn.fetchrow(sql)
-        if result is None:
-            return None
-        else:
-            return result
-    
-        
-async def query_list( sql: str) -> List[Any]:
-    async with get_db_connection() as connection:
-        if connection is not None:
-            return await connection.fetch(sql)
-        else:
-            return []
-    
-async def save( sql: str) -> int:
-    async with get_db_connection() as connection:
-        if connection is not None:
-            return await connection.execute(sql)
-        else:
-            return 0
-    
-async def insert_waterlevel( request: Request):
-    SQL = f"""INSERT INTO station_{request.code} (ts, height)
-                VALUES"""
-    if len(request.data) > 0:
+        return await conn.fetchrow(sql)
+
+async def query_list(sql: str) -> List[Any]:
+    async with get_db_connection() as conn:
+        return await conn.fetch(sql)
+
+async def save(sql: str) -> int:
+    async with get_db_connection() as conn:
+        return await conn.execute(sql)
+
+# 允许的表名模式：station_ 后跟纯数字
+_TABLE_NAME_PATTERN = re.compile(r'^station_\d+$')
+
+def _validate_table_name(table_name: str) -> str:
+    """校验表名，防止 SQL 注入"""
+    if not _TABLE_NAME_PATTERN.match(table_name):
+        raise ValueError(f"非法的表名: {table_name}")
+    return table_name
+
+async def insert_waterlevel(request: Request):
+    """使用参数化查询插入水位数据，防止 SQL 注入"""
+    if not request.data:
+        return
+
+    table_name = _validate_table_name(f"station_{request.code}")
+    sql = f"INSERT INTO {table_name} (ts, height) VALUES ($1, $2) ON CONFLICT (ts) DO NOTHING;"
+
+    async with get_db_connection() as conn:
         for wateritem_list in batched(request.data, n=1000):
-            sql = SQL
-            for water_item in wateritem_list:
-                sql += f"('{water_item.timestamp}', {water_item.height}),"
-            sql= sql[:-1] + " ON CONFLICT (ts) DO NOTHING;"
-            await save(sql)
+            # 转换为 asyncpg 要求的原生类型：timestamp → datetime, height → float
+            records = [
+                (datetime.strptime(item.timestamp, "%Y-%m-%d %H:%M"), float(item.height))
+                for item in wateritem_list
+            ]
+            await conn.executemany(sql, records)
 
 async def get_total_count() -> int:
-    sql: str = 'select count(*) from station;'
+    sql = 'SELECT count(*) FROM station;'
     result = await query_one(sql)
-    if result == None:
+    if result is None:
         return 0
-    else:
-        return int(result[0])
-
-async def recoder_count_change(func):
-    async def wrap(*args, **kwargs):
-        old_count: int = await get_total_count()
-        result = func(*args, **kwargs)
-        new_count: int = await get_total_count()
-        change_int: int = new_count - old_count
-        log.info(f"实际新增 {change_int} 条水位数据")
-        return result
-    return wrap
-        
+    return int(result[0])

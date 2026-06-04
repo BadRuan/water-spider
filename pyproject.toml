@@ -1,16 +1,19 @@
 [project]
-name = "learn-python"
-version = "0.1.0"
-description = "Add your description here"
+name = "water-spider"
+version = "0.2.0"
+description = "安徽省水信息系统水位数据爬虫"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "asyncpg>=0.31.0",
-    "psycopg2-binary>=2.9.11",
+    "httpx>=0.28.1",
     "pydantic-settings>=2.14.1",
-    "pytest>=9.0.2",
-    "requests>=2.32.5",
     "rich>=14.3.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
 ]
 
 [[tool.uv.index]]

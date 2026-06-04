@@ -1,6 +1,6 @@
 from json import loads
 from typing import List
-import base64
+import threading
 from src.model import WaterItem
 from src.utils.logger import Logger
 
@@ -8,20 +8,24 @@ from src.utils.logger import Logger
 logger = Logger(__name__)
 
 
-# 单例模式装饰器
-def Singleton(cls):
-    _instance = {}
+class _SingletonMeta(type):
+    """线程安全的单例元类"""
+    _instances: dict = {}
+    _lock = threading.Lock()
 
-    def _singleton(*args, **kwargs):
-        if cls not in _instance:
-            _instance[cls] = cls(*args, **kwargs)
-        return _instance[cls]
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            with cls._lock:
+                # 双重检查锁定
+                if cls not in cls._instances:
+                    instance = super().__call__(*args, **kwargs)
+                    cls._instances[cls] = instance
+        return cls._instances[cls]
 
-    return _singleton
 
+class WaterSecurity(metaclass=_SingletonMeta):
+    """水位数据加解密工具"""
 
-@Singleton
-class WaterSecurity:
     def __init__(self):
         self.version = "2.1"
         self._encode_chars = (
@@ -32,6 +36,7 @@ class WaterSecurity:
             self._decode_chars[ord(char)] = i
 
     def gblen(self, s: str) -> int:
+        """计算字符串长度（中文字符算 2）"""
         length = 0
         for char in s:
             if ord(char) > 127 or ord(char) == 94:
@@ -41,55 +46,57 @@ class WaterSecurity:
         return length
 
     def encode(self, data: str) -> str:
-        data += ""
         if not data:
             return ""
 
-        processed_data = self.utf16to8(encode_uri_component(data).replace("+", "%2B"))
+        processed_data = self._utf16to8(_encode_uri_component(data).replace("+", "%2B"))
         if self.gblen(processed_data) % 2 != 0:
             processed_data += "*"
 
-        transposed_data = self.parity_transposition(processed_data)
-        encoded_str = self._encode(transposed_data)
+        transposed_data = self._parity_transposition(processed_data)
+        encoded_str = self._base64_encode(transposed_data)
         return f"{self.version}{encoded_str}"
 
     def decode(self, data: str) -> str:
-        if not isinstance(data, str):
-            data += ""
-        if len(data) < 5 or not data:
+        if not isinstance(data, str) or len(data) < 5:
             return "[]"
 
-        if self.version and data[:3] != self.version:
+        if data[:3] != self.version:
             return data
 
         processed_data = data[3:]
         end_tag = processed_data[-4:]
-        tags_str = processed_data[processed_data.index(end_tag) :]
+        tags_str = processed_data[processed_data.index(end_tag):]
         tags_str = tags_str[4:-4]
 
-        tags = [tags_str[i : i + 4] for i in range(0, len(tags_str), 4)]
+        tags = [tags_str[i: i + 4] for i in range(0, len(tags_str), 4)]
         positions = self._get_tags_position(processed_data, tags)
 
         content = {}
         index = 0
         for pos in sorted(positions):
             msg = processed_data[index:pos]
-            tag = processed_data[pos : pos + 4]
+            tag = processed_data[pos: pos + 4]
             content[tag] = msg
             index = pos + 4
 
         result = "".join([content[tag] for tag in tags])
-        decoded_str = self._decode(result)
-        return self.utf8to16(decoded_str)
+        decoded_str = self._base64_decode(result)
+        return self._utf8to16(decoded_str)
 
-    def parity_transposition(self, data: str) -> str:
+    def _parity_transposition(self, data: str) -> str:
+        """奇偶位互换"""
         new_data = []
         for i in range(0, len(data), 2):
-            new_data.append(data[i + 1])
-            new_data.append(data[i])
+            if i + 1 < len(data):
+                new_data.append(data[i + 1])
+                new_data.append(data[i])
+            else:
+                new_data.append(data[i])
         return "".join(new_data)
 
-    def _encode(self, str_: str) -> str:
+    def _base64_encode(self, str_: str) -> str:
+        """自定义 base64 编码"""
         out = []
         i = 0
         while i < len(str_):
@@ -118,71 +125,63 @@ class WaterSecurity:
             out.append(self._encode_chars[63 & c3])
         return "".join(out)
 
-    def _decode(self, str_: str) -> str:
+    def _base64_decode(self, str_: str) -> str:
+        """自定义 base64 解码"""
         out = []
         i = 0
         while i < len(str_):
-            error_message = "解密数据异常"
-            while True:
-                if i >= len(str_):
-                    logger.error(error_message)
-                    raise ValueError(error_message)
-                c1 = self._decode_chars[ord(str_[i])]
+            while i < len(str_) and self._decode_chars[ord(str_[i])] == -1:
                 i += 1
-                if c1 != -1:
-                    break
+            if i >= len(str_):
+                break
+            c1 = self._decode_chars[ord(str_[i])]
+            i += 1
 
-            while True:
-                if i >= len(str_):
-                    logger.error(error_message)
-                    raise ValueError(error_message)
-                c2 = self._decode_chars[ord(str_[i])]
+            while i < len(str_) and self._decode_chars[ord(str_[i])] == -1:
                 i += 1
-                if c2 != -1:
-                    break
+            if i >= len(str_):
+                raise ValueError("解密数据异常")
+            c2 = self._decode_chars[ord(str_[i])]
+            i += 1
 
             out.append(chr((c1 << 2) | (48 & c2) >> 4))
 
-            while True:
-                if i >= len(str_):
-                    return "".join(out)
-                c3 = self._decode_chars[ord(str_[i])]
+            while i < len(str_) and self._decode_chars[ord(str_[i])] == -1:
                 i += 1
-                if c3 != -1:
-                    break
+            if i >= len(str_):
+                return "".join(out)
+            c3 = self._decode_chars[ord(str_[i])]
+            i += 1
 
             out.append(chr((15 & c2) << 4 | (60 & c3) >> 2))
 
-            while True:
-                if i >= len(str_):
-                    return "".join(out)
-                c4 = self._decode_chars[ord(str_[i])]
+            while i < len(str_) and self._decode_chars[ord(str_[i])] == -1:
                 i += 1
-                if c4 != -1:
-                    break
+            if i >= len(str_):
+                return "".join(out)
+            c4 = self._decode_chars[ord(str_[i])]
+            i += 1
 
             out.append(chr((3 & c3) << 6 | c4))
         return "".join(out)
 
-    def utf16to8(self, str_: str) -> str:
+    def _utf16to8(self, str_: str) -> str:
         out = []
         for char in str_:
             c = ord(char)
             if 1 <= c <= 127:
                 out.append(char)
             elif c > 2047:
-                out.extend(
-                    [
-                        chr(224 | (c >> 12) & 15),
-                        chr(128 | (c >> 6) & 63),
-                        chr(128 | c & 63),
-                    ]
-                )
+                out.extend([
+                    chr(224 | (c >> 12) & 15),
+                    chr(128 | (c >> 6) & 63),
+                    chr(128 | c & 63),
+                ])
             else:
                 out.extend([chr(192 | (c >> 6) & 31), chr(128 | c & 63)])
         return "".join(out)
 
-    def utf8to16(self, str_: str) -> str:
+    def _utf8to16(self, str_: str) -> str:
         out = []
         i = 0
         while i < len(str_):
@@ -206,73 +205,37 @@ class WaterSecurity:
         positions = []
         for tag in tags:
             if tag not in data:
-                message = f"Tag {tag} not found in data."
-                logger.error(message)
-                raise ValueError(message)
+                raise ValueError(f"Tag {tag} not found in data.")
             positions.append(data.index(tag))
         return sorted(positions)
 
 
-def encode_uri_component(s: str) -> str:
-    import urllib.parse
+def _encode_uri_component(s: str) -> str:
+    from urllib.parse import quote
+    return quote(s, safe="~()*!.'")
 
-    return urllib.parse.quote(s, safe="~()*!.'")
 
-@Singleton
-class DecodeTool:
-    def __init__(self, version: str = "2.1") -> None:
-        self.version = version
+class Parser(metaclass=_SingletonMeta):
+    """解析 API 响应数据"""
 
-    def _parity_transposition(self, e) -> str:
-        result = [""] * len(e)
-        for i in range(0, len(e), 2):
-            result[i] = e[i + 1] if i + 1 < len(e) else ""
-            result[i + 1] = e[i] if i + 1 < len(e) else ""
-        return "".join(result)
-
-    def _parity_transposition_reverse(self, e) -> str:
-        return self._parity_transposition(e)
-
-    def _decode(self, encrypted_data: str) -> str:
-        if not encrypted_data or encrypted_data[:3] != self.version:
-            message: str = "后台版本不一致或无效的加密数据！"
-            logger.error(message)
-            raise ValueError(message)
-
-        versioned_data = encrypted_data[3:]
-        base64_decoded = base64.b64decode(versioned_data.encode("utf-8"))
-        utf8_decoded = base64_decoded.decode("utf-8")
-        original_order_restored = self._parity_transposition_reverse(utf8_decoded)
-
-        # 移除可能存在的星号(*)，这里假设末尾只有一个星号，如果不止一个或规则不同，请按实际情况调整
-        if original_order_restored.endswith("*"):
-            original_order_restored = original_order_restored[:-1]
-
-        return original_order_restored.encode("utf-8").decode("utf-8")
-
-    def decrypt(self, encrypted_text: str) -> str:
-        return self._decode(encrypted_text)
-
-@Singleton
-class Parser:
     def __init__(self):
-        self.tool = WaterSecurity()
+        self._security = WaterSecurity()
 
     def translate(self, data: str) -> List[WaterItem]:
         _r = loads(data)
-        # 通过响应码 respCode 判断响应是否成功
-        respCode: str = _r["respCode"]
-        if "0" != respCode:
-            _msg: str = f"响应错误，错误信息为 {_r['respMsg']}"
+        resp_code: str = _r["respCode"]
+        if resp_code != "0":
+            _msg = f"响应错误，错误信息为 {_r['respMsg']}"
             logger.error(_msg)
             raise ValueError(_msg)
 
-        encode_str: str = _r["data"]  # 从响应内容取出加密数据内容
-        decode_str: str = self.tool.decode(encode_str)
+        encode_str: str = _r["data"]
+        decode_str: str = self._security.decode(encode_str)
         json_obj = loads(decode_str)
         data_sw: List = json_obj["data_sw"]
         return [WaterItem(height=i["Z"], timestamp=i["TM"]) for i in data_sw]
 
+
 encode = WaterSecurity().encode
-decode = DecodeTool().decrypt
+decode = WaterSecurity().decode
 translate = Parser().translate
